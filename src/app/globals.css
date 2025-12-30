@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  /* WINRVTE Identity Colors */
+  --bg-deep: #0a0a0f;
+  --bg-surface: #12121a;
+  --bg-surface-hover: #1a1a24;
+
+  --accent-primary: #00BFFF;
+  --accent-secondary: #00E5FF;
+  --accent-glow: rgba(0, 191, 255, 0.4);
+
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b0;
+  --text-dim: #606070;
+
+  --danger: #ff3366;
+  --success: #00ff9d;
+}
+
+@theme {
+  --color-obsidian: var(--bg-deep);
+  --color-charcoal: var(--bg-surface);
+  --color-charcoal-hover: var(--bg-surface-hover);
+
+  --color-accent: var(--accent-primary);
+  --color-accent-bright: var(--accent-secondary);
+
+  --color-danger: var(--danger);
+
+  --font-kanit: var(--font-kanit);
+  --font-inter: var(--font-inter);
+  --font-display: var(--font-kanit);
+  --font-body: var(--font-inter);
+
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  overflow: hidden;
+  /* Prevent scroll for the presentation feel */
+}
+
+/* Custom Utilities for Glassmorphism & Neon */
+@utility glass-panel {
+  background: rgba(18, 18, 26, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@utility neon-text {
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+@utility neon-box {
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.15);
+}
+
+/* Fallback Font Utilities */
+.font-display {
+  font-family: var(--font-kanit), impact, sans-serif !important;
+}
+
+.font-body {
+  font-family: var(--font-inter), sans-serif !important;
+}
+
+.font-brand {
+  font-family: var(--font-good-timing), sans-serif !important;
+}

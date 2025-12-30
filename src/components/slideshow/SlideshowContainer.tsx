@@ -1,0 +1,110 @@
+"use client";
+
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Slide1Hook } from "./Slide1Hook";
+import { Slide2Chaos } from "./Slide2Chaos";
+import { Slide3Blueprint } from "./Slide3Blueprint";
+import { Slide4ZeroTouch } from "./Slide4ZeroTouch";
+import { Slide5Watchtower } from "./Slide5Watchtower";
+import { Slide6ContentROI } from "./Slide6ContentROI";
+import { Slide7Proof } from "./Slide7Proof";
+import { Slide8Offer } from "./Slide8Offer";
+
+export function SlideshowContainer() {
+    const [currentSlide, setCurrentSlide] = useState(1);
+    const [isExiting1, setIsExiting1] = useState(false);
+
+    // Special transition from Hook (1) to Chaos (2)
+    const handleInitialize = () => {
+        setIsExiting1(true);
+        setTimeout(() => {
+            setCurrentSlide(2);
+        }, 1500);
+    };
+
+    const goToSlide = (slideIndex: number) => {
+        if (slideIndex === 1) {
+            setIsExiting1(false);
+        }
+        setCurrentSlide(slideIndex);
+    };
+
+    const handleNext = () => {
+        setCurrentSlide((prev) => prev + 1);
+    };
+
+    const handleBack = () => {
+        // If going back to Slide 1 from Slide 2
+        if (currentSlide === 2) {
+            setIsExiting1(false);
+            setCurrentSlide(1);
+        } else {
+            setCurrentSlide((prev) => prev - 1);
+        }
+    };
+
+    return (
+        <div className="relative w-screen h-screen overflow-hidden bg-obsidian text-white">
+            {/* Background Layer - Nebula / Noise */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-charcoal via-obsidian to-obsidian opacity-80" />
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+
+            {/* Main Content Area */}
+            <AnimatePresence mode="wait">
+
+                {currentSlide === 1 && (
+                    <Slide1Hook
+                        key="slide1"
+                        isExiting={isExiting1}
+                        onInitialize={handleInitialize}
+                    />
+                )}
+
+                {currentSlide === 2 && (
+                    <Slide2Chaos
+                        key="slide2"
+                        isActive={true}
+                        onBack={handleBack}
+                        onNext={handleNext} // Assuming we add onNext to Slide2Chaos if not present, we need to update Slide2 to accept it.
+                    // Wait, I need to update Slide2Chaos to accept onNext triggering Slide 3.
+                    // Currently Slide2Chaos only has "View The Solution" button which I should wire up.
+                    />
+                )}
+
+                {currentSlide === 3 && (
+                    <Slide3Blueprint key="slide3" isActive={true} onNext={handleNext} onBack={handleBack} />
+                )}
+
+                {currentSlide === 4 && (
+                    <Slide4ZeroTouch key="slide4" isActive={true} onNext={handleNext} onBack={handleBack} />
+                )}
+
+                {currentSlide === 5 && (
+                    <Slide5Watchtower key="slide5" isActive={true} onNext={handleNext} onBack={handleBack} />
+                )}
+
+                {currentSlide === 6 && (
+                    <Slide6ContentROI key="slide6" isActive={true} onNext={handleNext} onBack={handleBack} />
+                )}
+
+                {currentSlide === 7 && (
+                    <Slide7Proof key="slide7" isActive={true} onNext={handleNext} onBack={handleBack} />
+                )}
+
+                {currentSlide === 8 && (
+                    <Slide8Offer key="slide8" isActive={true} onBack={handleBack} />
+                )}
+
+            </AnimatePresence>
+
+            {/* Flash Overlay for Slide 1 -> 2 Transition */}
+            <motion.div
+                className="absolute inset-0 bg-accent z-50 pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={isExiting1 ? { opacity: [0, 1, 0], transition: { duration: 0.8, delay: 1.2, times: [0, 0.5, 1] } } : { opacity: 0 }}
+            />
+        </div>
+    );
+}
