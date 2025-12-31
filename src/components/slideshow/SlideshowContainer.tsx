@@ -6,6 +6,8 @@ import { Slide1Hook } from "./Slide1Hook";
 import { Slide2Chaos } from "./Slide2Chaos";
 import { Slide3Blueprint } from "./Slide3Blueprint";
 import { Slide4ZeroTouch } from "./Slide4ZeroTouch";
+import { Slide5Growth } from "./Slide5Growth";
+import { Slide6External } from "./Slide6External";
 import { Slide5Watchtower } from "./Slide5Watchtower";
 import { Slide6ContentROI } from "./Slide6ContentROI";
 import { Slide7Proof } from "./Slide7Proof";
@@ -67,9 +69,7 @@ export function SlideshowContainer() {
                         key="slide2"
                         isActive={true}
                         onBack={handleBack}
-                        onNext={handleNext} // Assuming we add onNext to Slide2Chaos if not present, we need to update Slide2 to accept it.
-                    // Wait, I need to update Slide2Chaos to accept onNext triggering Slide 3.
-                    // Currently Slide2Chaos only has "View The Solution" button which I should wire up.
+                        onNext={handleNext}
                     />
                 )}
 
@@ -82,19 +82,27 @@ export function SlideshowContainer() {
                 )}
 
                 {currentSlide === 5 && (
-                    <Slide5Watchtower key="slide5" isActive={true} onNext={handleNext} onBack={handleBack} />
+                    <Slide5Growth key="slide5" isActive={true} onNext={handleNext} onBack={handleBack} />
                 )}
 
                 {currentSlide === 6 && (
-                    <Slide6ContentROI key="slide6" isActive={true} onNext={handleNext} onBack={handleBack} />
+                    <Slide6External key="slide6" isActive={true} onNext={handleNext} onBack={handleBack} />
                 )}
 
                 {currentSlide === 7 && (
-                    <Slide7Proof key="slide7" isActive={true} onNext={handleNext} onBack={handleBack} />
+                    <Slide5Watchtower key="slide7" isActive={true} onNext={handleNext} onBack={handleBack} />
                 )}
 
                 {currentSlide === 8 && (
-                    <Slide8Offer key="slide8" isActive={true} onBack={handleBack} />
+                    <Slide6ContentROI key="slide8" isActive={true} onNext={handleNext} onBack={handleBack} />
+                )}
+
+                {currentSlide === 9 && (
+                    <Slide7Proof key="slide9" isActive={true} onNext={handleNext} onBack={handleBack} />
+                )}
+
+                {currentSlide === 10 && (
+                    <Slide8Offer key="slide10" isActive={true} onBack={handleBack} />
                 )}
 
             </AnimatePresence>

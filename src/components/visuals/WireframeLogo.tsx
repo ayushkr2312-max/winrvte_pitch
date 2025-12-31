@@ -1,17 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export function WireframeLogo({ isAbsorbing }: { isAbsorbing: boolean }) {
     // Simple "W" geometric path
     // Coordinate system 100x100
-    const pathVariants = {
+    const pathVariants: Variants = {
         hidden: { pathLength: 0, opacity: 0 },
         visible: {
             pathLength: 1,
             opacity: 1,
-            transition: { duration: 2, ease: "easeInOut" }
+            transition: { duration: 2, ease: "easeInOut" as const }
         },
         absorbing: {
             strokeWidth: 4,

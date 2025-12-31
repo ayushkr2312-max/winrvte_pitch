@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@400;500;600;700;800;900&display=swap');
+
+/* Local Font: Good Timing */
+@font-face {
+  font-family: 'Good Timing';
+  src: url('/fonts/good-timing-bd.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 :root {
   /* WINRVTE Identity Colors */
   --bg-deep: #0a0a0f;
@@ -28,8 +41,9 @@
 
   --color-danger: var(--danger);
 
-  --font-kanit: var(--font-kanit);
-  --font-inter: var(--font-inter);
+  --font-kanit: 'Kanit', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  --font-good-timing: 'Good Timing', sans-serif;
   --font-display: var(--font-kanit);
   --font-body: var(--font-inter);
 
