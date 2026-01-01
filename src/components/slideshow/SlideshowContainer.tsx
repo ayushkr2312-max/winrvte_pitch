@@ -95,14 +95,10 @@ export function SlideshowContainer() {
                 )}
 
                 {currentSlide === 8 && (
-                    <Slide7Proof key="slide8" isActive={true} onNext={handleNext} onBack={handleBack} />
-                )}
-
-                {currentSlide === 9 && (
                     <SlideProjectPhoenix key="slide9" isActive={true} onNext={handleNext} onBack={handleBack} />
                 )}
 
-                {currentSlide === 10 && (
+                {currentSlide === 9 && (
                     <Slide8Offer key="slide10" isActive={true} onBack={handleBack} />
                 )}
 
@@ -119,7 +115,7 @@ export function SlideshowContainer() {
             <div className="absolute inset-0 z-[60] pointer-events-none">
                 {/* Page Number Marker */}
                 <div className="fixed top-8 right-8 font-mono text-[10px] text-white/20 tracking-[0.2em] pointer-events-none mix-blend-difference">
-                    {String(currentSlide).padStart(2, '0')} / 10
+                    {String(currentSlide).padStart(2, '0')} / 9
                 </div>
 
                 {/* Back Arrow (Bottom Left) */}
@@ -134,7 +130,7 @@ export function SlideshowContainer() {
                 )}
 
                 {/* Next Arrow (Bottom Right) */}
-                {currentSlide < 10 && (
+                {currentSlide < 9 && (
                     <button
                         onClick={handleNext}
                         className="fixed bottom-4 right-4 text-white/10 hover:text-white/50 transition-colors pointer-events-auto p-4"

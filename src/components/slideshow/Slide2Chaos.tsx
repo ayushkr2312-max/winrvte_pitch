@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { Users, Video, BrainCircuit, ArrowLeft, ChevronRight, AlertTriangle, Activity, Hourglass, Database, Layers } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion";
+import { Users, Video, BrainCircuit, ArrowLeft, ChevronRight, AlertTriangle, Activity, Hourglass, Database, AlertOctagon, Zap, ShieldAlert, FileWarning } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Lenis from "lenis";
 
@@ -47,71 +47,87 @@ export function Slide2Chaos({ isActive, onBack, onNext }: Slide2Props) {
         };
     }, [isActive]);
 
-    const headerOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0]);
-    const headerScale = useTransform(scrollYProgress, [0, 0.05], [1, 0.9]);
-
-    // Parallax elements
-    const parallaxY1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-    const parallaxY2 = useTransform(scrollYProgress, [0, 1], [0, -200]);
+    // Parallax & transforms
+    const headerOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+    const headerScale = useTransform(scrollYProgress, [0, 0.1], [1, 0.9]);
+    const bgNoiseOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.05, 0.1, 0.05]);
 
     return (
         <div
             ref={containerRef}
-            className="absolute inset-0 z-20 overflow-y-auto overflow-x-hidden bg-obsidian scrollbar-hide perspective-1000"
+            className="absolute inset-0 z-20 overflow-y-auto overflow-x-hidden bg-[#050505] scrollbar-hide perspective-1000 selection:bg-blue-500/30 font-brand"
         >
+            {/* Global Noise Overlay */}
+            <motion.div
+                style={{ opacity: bgNoiseOpacity }}
+                className="fixed inset-0 bg-noise pointer-events-none z-0 mix-blend-overlay"
+            />
+
+            {/* Faint Blue/Dark Gradient at bottom */}
+            <div className="fixed bottom-0 left-0 right-0 h-[50vh] bg-gradient-to-t from-blue-950/20 to-transparent pointer-events-none z-0" />
+
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.8 }}
                 className="relative min-h-full"
             >
-                {/* THE CHAOS THREAD - SVG PATH */}
-                {/* 6 Sections + Header + Footer -> Needs ~600vh+ */}
-                <div className="absolute top-0 left-0 w-full h-[650vh] pointer-events-none z-0 hidden md:block">
+                {/* --- THE CHAOS BEAM (SCROLL LINE) --- */}
+                {/* z-0 ensures it stays behind the z-10 sections */}
+                <div className="absolute top-0 left-0 w-full h-[580vh] pointer-events-none z-0 hidden md:block">
                     <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
                         <defs>
-                            <linearGradient id="threadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                {/* Gradient stops for 6 sections */}
-                                <stop offset="0%" stopColor="#3B82F6" /> {/* Blue (Roster) */}
-                                <stop offset="15%" stopColor="#3B82F6" />
-                                <stop offset="25%" stopColor="#EF4444" /> {/* Red (Content) */}
-                                <stop offset="40%" stopColor="#10B981" /> {/* Emerald (Strategic) */}
-                                <stop offset="55%" stopColor="#3B82F6" /> {/* Blue (Valuation) */}
-                                <stop offset="70%" stopColor="#EF4444" /> {/* Red (Firefighting) */}
-                                <stop offset="85%" stopColor="#A855F7" /> {/* Purple (Entropy) */}
+                            <linearGradient id="beamGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                {/* 
+                                    Gradient Map matched to Sections:
+                                    0%: Hero (Blue)
+                                    15%: Roster (Blue)
+                                    30%: Content (Red)
+                                    45%: Strategic (Amber)
+                                    60%: Valuation (Blue)
+                                    75%: Firefighting (Red)
+                                    90%: Entropy (Purple)
+                                */}
+                                <stop offset="0%" stopColor="#3B82F6" />   {/* Blue (Hero) */}
+                                <stop offset="15%" stopColor="#3B82F6" />  {/* Blue (Roster) */}
+                                <stop offset="30%" stopColor="#EF4444" />  {/* Red (Content) */}
+                                <stop offset="45%" stopColor="#F59E0B" />  {/* Amber (Strategic) */}
+                                <stop offset="60%" stopColor="#3B82F6" />  {/* Blue (Valuation) */}
+                                <stop offset="75%" stopColor="#EF4444" />  {/* Red (Firefighting) */}
+                                <stop offset="90%" stopColor="#A855F7" />  {/* Purple (Entropy) */}
                                 <stop offset="100%" stopColor="#A855F7" />
                             </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="0.5" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
                         </defs>
 
-                        {/* Background Faint Path 
-                            Logic: Rectilinear Path with SHIFTED Gap Crossing.
-                            Adjusted to account for taller logical sections.
-                            - Gap 1-2: Y=28
-                            - Gap 2-3: Y=41
-                            - Gap 3-4: Y=55 (Shifted down to avoid Sec 3 text)
-                            - Gap 4-5: Y=69 (Shifted down to avoid Sec 4 text)
-                            - Gap 5-6: Y=83 (Shifted down to avoid Sec 5 text)
-                        */}
+                        {/* Background Guide Line */}
                         <path
-                            d="M 50 0 L 50 15 L 80 15 L 80 28 L 20 28 L 20 41 L 80 41 L 80 55 L 20 55 L 20 69 L 80 69 L 80 83 L 20 83 L 20 92 L 50 92 L 50 100"
+                            d="M 50 0 L 50 15 L 80 15 L 80 28 L 20 28 L 20 41 L 80 41 L 80 55 L 20 55 L 20 69 L 80 69 L 80 83 L 20 83 L 20 92 L 38 92"
                             fill="none"
-                            stroke="rgba(255,255,255,0.05)"
+                            stroke="rgba(255,255,255,0.03)"
                             strokeWidth="0.2"
                         />
 
-                        {/* Active Drawing Path */}
+                        {/* The Active Beam */}
                         <motion.path
-                            d="M 50 0 L 50 15 L 80 15 L 80 28 L 20 28 L 20 41 L 80 41 L 80 55 L 20 55 L 20 69 L 80 69 L 80 83 L 20 83 L 20 92 L 50 92 L 50 100"
+                            d="M 50 0 L 50 15 L 80 15 L 80 28 L 20 28 L 20 41 L 80 41 L 80 55 L 20 55 L 20 69 L 80 69 L 80 83 L 20 83 L 20 92 L 38 92"
                             fill="none"
-                            stroke="url(#threadGradient)"
-                            strokeWidth="0.3"
+                            stroke="url(#beamGradient)"
+                            strokeWidth="0.4"
+                            strokeLinecap="round"
                             style={{ pathLength: scrollYProgress }}
-                            filter="drop-shadow(0 0 2px rgba(255,255,255,0.5))"
+                            filter="url(#glow)"
                         />
                     </svg>
                 </div>
 
-                {/* Back Button - Fixed Position */}
+                {/* Navigation: Return */}
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -120,125 +136,162 @@ export function Slide2Chaos({ isActive, onBack, onNext }: Slide2Props) {
                 >
                     <button
                         onClick={onBack}
-                        className="text-white/70 hover:text-white flex items-center gap-2 uppercase tracking-widest text-xs font-display transition-colors group"
+                        className="text-white/50 hover:text-white flex items-center gap-3 uppercase tracking-[0.2em] text-[10px] font-mono transition-colors group"
                     >
-                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        Return
+                        <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+                        <span>System Exit</span>
                     </button>
                 </motion.div>
 
-                {/* SECTION 0: THE HOOK */}
-                <section className="min-h-screen flex flex-col items-center justify-center relative px-6 py-20">
+                {/* --- SECTION 0: THE HOOK --- */}
+                <section className="min-h-screen flex flex-col items-center justify-center relative px-6 py-20 z-10">
                     <motion.div
                         style={{ opacity: headerOpacity, scale: headerScale }}
-                        className="text-center space-y-6 max-w-4xl z-10 sticky top-1/3"
+                        className="text-center space-y-8 max-w-5xl relative"
                     >
-                        <h2 className="text-4xl md:text-7xl font-display font-bold leading-tight">
-                            THE <span className="text-accent underline decoration-accent/30 underline-offset-8">"VIBES-BASED"</span> TRAP
+                        {/* Status Label - Subtler Pulse */}
+                        <div className="inline-flex items-center gap-2 px-3 py-1 border border-blue-500/30 bg-blue-900/10 rounded-full mb-4">
+                            <Activity className="w-3 h-3 text-blue-500" />
+                            <span className="text-[10px] font-mono text-blue-400 tracking-widest uppercase">System Diagnostics Initiated</span>
+                        </div>
+
+                        <h2 className="text-5xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter">
+                            THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 decoration-blue-500/30 underline-offset-8">VIBES-BASED</span> <br />
+                            <span className="text-red-500 animate-[pulse_1.5s_ease-in-out_infinite]">TRAP.</span>
                         </h2>
-                        <p className="text-xl md:text-3xl text-text-secondary leading-relaxed">
-                            You aren't losing because of bad luck.<br />
-                            You are <span className="text-danger font-bold neon-text">flying blind.</span>
+
+                        <p className="text-xl md:text-2xl text-zinc-400 font-light leading-relaxed max-w-3xl mx-auto">
+                            You aren't losing because of bad luck.
                         </p>
                     </motion.div>
 
                     {/* Scroll Hint */}
                     <motion.div
                         style={{ opacity: headerOpacity }}
-                        className="absolute bottom-12 flex flex-col items-center gap-2"
-                        animate={{ y: [0, 10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute bottom-12 flex flex-col items-center gap-3"
                     >
-                        <span className="text-xs uppercase tracking-widest text-accent/50">Scroll to Analyze</span>
-                        <div className="w-[1px] h-12 bg-gradient-to-b from-accent/0 via-accent/50 to-accent/0" />
+                        <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-600">Scan Infrastructure</span>
+                        <ChevronRight className="w-4 h-4 text-zinc-600 rotate-90" />
                     </motion.div>
                 </section>
 
-                {/* 1. ROSTER ROULETTE (Blue, Left) - Original */}
+                {/* --- CHAOS SECTIONS --- */}
+
+                {/* 1. ROSTER ROULETTE (BLUE) */}
                 <ChaosSection
+                    index="01"
                     title="ROSTER ROULETTE"
-                    description={<>Esports organizations are burning millions on player acquisitions based on <span className="text-white font-bold">community hype</span> and <span className="text-white font-bold">past glory</span>. Without granular performance data, you're essentially gambling on lineups.</>}
-                    consequence="Budget wasted on star players who don't fit the system, leading to rosters that disband in a month."
-                    icon={<RosterIcon />}
+                    subtitle="Acquisition Failure"
+                    description={<>Burning budget on <span className="text-white font-semibold">community hype</span>. Without granular data, you are essentially gambling on lineups.</>}
+                    stat="-$250k / yr"
+                    statLabel="Waste Avg"
+                    icon={<Users className="w-8 h-8" />}
                     theme="blue"
                     align="left"
+                    visual={<RosterVisual />}
                 />
 
-                {/* 2. THE CONTENT VOID (Red, Right) - Original */}
+                {/* 2. THE CONTENT VOID (RED) */}
                 <ChaosSection
+                    index="02"
                     title="THE CONTENT VOID"
-                    description={<>Content teams are <span className="text-white font-bold">burning cash</span> on high-production edits without knowing what actually converts. Blindly chasing trends instead of building a sustainable narrative attached to winning.</>}
-                    consequence="Zero sponsor ROI. Interactions specific to matches are lost, and fandom monetization remains non-existent."
-                    icon={<ContentIcon />}
+                    subtitle="Engagement Loss"
+                    description={<>High production costs with <span className="text-white font-semibold">zero ROI</span>. Blindly chasing trends instead of building a narrative attached to winning.</>}
+                    stat="0%"
+                    statLabel="Conversion"
+                    icon={<Video className="w-8 h-8" />}
                     theme="red"
                     align="right"
+                    visual={<ContentVisual />}
                 />
 
-                {/* 3. STRATEGIC PARALYSIS (Emerald, Left) - Revamped Coach */}
+                {/* 3. STRATEGIC PARALYSIS (AMBER) */}
                 <ChaosSection
+                    index="03"
                     title="STRATEGIC PARALYSIS"
-                    description={<>While your staff is manually logging scrim codes and fixing spreadsheet formulas, your competition is analyzing your weaknesses. You are paying your strategist to do <span className="text-white font-bold">data entry</span>. That isn't coaching; it’s administration.</>}
-                    consequence="Slow adaptation. You lose matches you should have won because your insights were days behind the meta."
-                    icon={<StrategicIcon />}
-                    theme="emerald"
+                    subtitle="Insight Latency"
+                    description={<>Your staff is manually logging scripts while opponents analyze your weaknesses. You are paying strategists to do <span className="text-white font-semibold">data entry</span>.</>}
+                    stat="48 hrs"
+                    statLabel="Analysis Lag"
+                    icon={<BrainCircuit className="w-8 h-8" />}
+                    theme="amber"
                     align="left"
+                    visual={<StrategicVisual />}
                 />
 
-                {/* 4. THE VALUATION BLACK BOX (Blue, Right) - New */}
+                {/* 4. THE VALUATION BLACK BOX (BLUE) */}
                 <ChaosSection
-                    title="THE VALUATION BLACK BOX"
-                    description={<>You have followers, but you don't have leverage. Sponsors don't care about "vibes"; they care about demographics, retention rates, and conversion. If you can't <span className="text-white font-bold">prove your growth</span> with hard data, you are invisible to serious brands.</>}
-                    consequence="Missed revenue. You stay dependent on prize pools and owner pockets because you cannot visualize your asset value to investors."
-                    icon={<ValuationIcon />}
+                    index="04"
+                    title="VALUATION BLACK BOX"
+                    subtitle="Leverage Zero"
+                    description={<>Sponsors don't care about "vibes". If you can't <span className="text-white font-semibold">prove your growth</span> with hard data, you are invisible to serious capital.</>}
+                    stat="INVISIBLE"
+                    statLabel="Asset Class"
+                    icon={<ShieldAlert className="w-8 h-8" />}
                     theme="blue"
                     align="right"
+                    visual={<ValuationVisual />}
                 />
 
-                {/* 5. REACTIVE FIREFIGHTING (Red, Left) - New */}
+                {/* 5. REACTIVE FIREFIGHTING (RED) */}
                 <ChaosSection
+                    index="05"
                     title="REACTIVE FIREFIGHTING"
-                    description={<>A player leaves. A designer ghosts you. Panic sets in. You scramble to Twitter DMs and sign the first available option. Without a pre-vetted <span className="text-white font-bold">"Shadow Roster"</span> or talent database, you are forced to make impulsive, desperate decisions.</>}
-                    consequence="Bad culture fits and wasted salaries. You hire who is available, not who is best, resetting your team's progress every few months."
-                    icon={<FirefightingIcon />}
+                    subtitle="Panic Hiring"
+                    description={<>A player leaves. Panic sets in. You sign the first available option. Without a <span className="text-white font-semibold">Shadow Roster</span>, you reset progress every split.</>}
+                    stat="CRITICAL"
+                    statLabel="Stability"
+                    icon={<Zap className="w-8 h-8" />}
                     theme="red"
                     align="left"
+                    visual={<FirefightingVisual />}
                 />
 
-                {/* 6. OPERATIONAL ENTROPY (Purple, Right) - New */}
+                {/* 6. OPERATIONAL ENTROPY (PURPLE) */}
                 <ChaosSection
+                    index="06"
                     title="OPERATIONAL ENTROPY"
-                    description={<>Your organization's brain is scattered across Discord logs, DM groups, and forgotten Google Docs. Valuable scrim history, player behavioral notes, and brand assets are <span className="text-white font-bold">lost in the chat scroll</span>. You don't own your data; your platforms do.</>}
-                    consequence="Amnesia. When a manager leaves, they take all your institutional knowledge with them, forcing you to start from zero."
-                    icon={<EntropyIcon />}
+                    subtitle="Data Fragmentation"
+                    description={<>Institutional knowledge scattered across DMs and Google Sheets. When staff leaves, they take your <span className="text-white font-semibold">brain</span> with them.</>}
+                    stat="LOST"
+                    statLabel="IP Value"
+                    icon={<Database className="w-8 h-8" />}
                     theme="purple"
                     align="right"
+                    visual={<EntropyVisual />}
                 />
 
-                {/* Navigation Footer */}
-                <div className="min-h-[50vh] flex flex-col items-center justify-center relative">
+
+                {/* --- FOOTER: TRANSITION TO ORDER --- */}
+                <div className="min-h-[50vh] flex flex-col items-center justify-center relative z-10 pb-20">
+                    <motion.div
+                        className="text-center mb-12"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ margin: "-20%" }}
+                    >
+                        <h3 className="text-2xl md:text-3xl text-white font-bold mb-2">Enough Chaos.</h3>
+                        <p className="text-zinc-500">It's time to build a system.</p>
+                    </motion.div>
+
                     <motion.button
                         onClick={onNext}
-                        className="p-8 group relative focus:outline-none flex flex-col items-center gap-4"
+                        className="group relative px-8 py-4 bg-transparent focus:outline-none"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ margin: "-100px" }}
                     >
-                        <div className="absolute inset-0 bg-accent/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        {/* Button Background & Border */}
+                        <div className="absolute inset-0 border border-white/20 skew-x-[-12deg] group-hover:border-blue-500 group-hover:bg-blue-500/10 transition-all duration-300" />
 
-                        <div className="relative">
-                            <ChevronRight className="w-16 h-16 text-accent drop-shadow-[0_0_15px_rgba(0,191,255,0.8)]" />
-                            <motion.div
-                                className="absolute inset-0 border-2 border-accent rounded-full opacity-0 group-hover:opacity-100"
-                                animate={{ scale: [1, 1.5], opacity: [0, 1, 0] }}
-                                transition={{ duration: 1.5, repeat: Infinity }}
-                            />
+                        <div className="relative flex items-center gap-4">
+                            <span className="text-sm font-mono text-zinc-400 uppercase tracking-widest group-hover:text-blue-400 transition-colors">
+                                Deploy
+                            </span>
+                            <span className="text-xl font-black text-white uppercase tracking-wider group-hover:text-white transition-colors">
+                                THE BLUEPRINT
+                            </span>
+                            <ChevronRight className="w-5 h-5 text-zinc-500 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
                         </div>
-
-                        <span className="text-sm font-display tracking-[0.2em] text-accent/80 uppercase group-hover:text-accent transition-colors">
-                            Enter The Blueprint
-                        </span>
                     </motion.button>
                 </div>
             </motion.div>
@@ -246,253 +299,161 @@ export function Slide2Chaos({ isActive, onBack, onNext }: Slide2Props) {
     );
 }
 
-// --- Sub-components ---
+// --- SUB-COMPONENTS ---
 
 interface ChaosSectionProps {
+    index: string;
     title: string;
+    subtitle: string;
     description: React.ReactNode;
-    consequence: string;
+    stat: string;
+    statLabel: string;
     icon: React.ReactNode;
-    theme: 'blue' | 'red' | 'emerald' | 'purple';
+    theme: 'blue' | 'red' | 'amber' | 'purple';
     align: 'left' | 'right';
+    visual: React.ReactNode;
 }
 
-const ChaosSection = ({ title, description, consequence, icon, theme, align }: ChaosSectionProps) => {
+const ChaosSection = ({ index, title, subtitle, description, stat, statLabel, icon, theme, align, visual }: ChaosSectionProps) => {
     const isLeft = align === 'left';
-    const colorMap = {
-        blue: { bg: 'bg-blue-500/5', border: 'border-blue-500/20', icon: 'text-blue-400' },
-        red: { bg: 'bg-red-500/5', border: 'border-red-500/20', icon: 'text-red-400' },
-        emerald: { bg: 'bg-emerald-500/5', border: 'border-emerald-500/20', icon: 'text-emerald-400' },
-        purple: { bg: 'bg-purple-500/5', border: 'border-purple-500/20', icon: 'text-purple-400' },
-    };
-    const colors = colorMap[theme];
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.2
-            }
-        }
+    // Theme configs
+    const themes = {
+        blue: { border: "border-blue-500/30", text: "text-blue-400", bg: "bg-blue-900/10", shadow: "shadow-blue-900/20" },
+        red: { border: "border-red-500/30", text: "text-red-400", bg: "bg-red-900/10", shadow: "shadow-red-900/20" },
+        amber: { border: "border-amber-500/30", text: "text-amber-400", bg: "bg-amber-900/10", shadow: "shadow-amber-900/20" },
+        purple: { border: "border-purple-500/30", text: "text-purple-400", bg: "bg-purple-900/10", shadow: "shadow-purple-900/20" },
     };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6, ease: "easeOut" as const }
-        }
-    };
+    const t = themes[theme];
 
     return (
         <motion.section
-            className={`min-h-[80vh] flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center justify-center gap-12 px-6 py-24 max-w-7xl mx-auto border-t border-white/5 relative z-10`}
-            initial="hidden"
-            whileInView="visible"
+            className={`min-h-[70vh] flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center justify-center gap-8 md:gap-20 px-6 py-12 max-w-7xl mx-auto relative z-10`}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20%" }}
-            variants={containerVariants}
+            transition={{ duration: 0.6 }}
         >
-            <div className="flex-1 space-y-8 z-10">
-                <motion.div variants={itemVariants} className="flex items-center gap-4">
-                    <div className={`p-4 ${colors.bg} rounded-full border ${colors.border} backdrop-blur-sm`}>
-                        {theme === 'blue' && <Activity className={`w-6 h-6 ${colors.icon}`} />}
-                        {theme === 'red' && <Hourglass className={`w-6 h-6 ${colors.icon}`} />}
-                        {theme === 'emerald' && <BrainCircuit className={`w-6 h-6 ${colors.icon}`} />}
-                        {theme === 'purple' && <Database className={`w-6 h-6 ${colors.icon}`} />}
+            {/* CONTENT CARD */}
+            <div className={`flex-1 relative group w-full max-w-lg`}>
+                {/* Tech Border Container */}
+                <div className={`absolute -inset-0.5 bg-gradient-to-r from-transparent via-${theme}-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl blur-sm`} />
+
+                <div className={`relative h-full bg-[#0a0a0a] border border-white/10 p-8 rounded-xl backdrop-blur-xl overflow-hidden`}>
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-6">
+                        <div className="space-y-1">
+
+                            <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">
+                                {title}
+                            </h3>
+                        </div>
+                        <div className={`p-2 rounded-lg ${t.bg} border ${t.border}`}>
+                            <div className={`${t.text}`}>{icon}</div>
+                        </div>
                     </div>
-                    <h3 className="text-3xl md:text-5xl font-display font-bold text-white tracking-wide">{title}</h3>
-                </motion.div>
 
-                <motion.p variants={itemVariants} className="text-lg md:text-xl text-text-secondary leading-relaxed">
-                    {description}
-                </motion.p>
-
-                <motion.div variants={itemVariants} className={`pl-6 border-l-2 ${colors.border.replace('/20', '/50')} space-y-2`}>
-                    <h4 className={`text-sm uppercase tracking-widest font-bold ${colors.icon}`}>The Consequence</h4>
-                    <p className="text-white/80 font-light">
-                        {consequence}
+                    {/* Description */}
+                    <p className="text-zinc-400 leading-relaxed mb-8 border-l-2 border-white/5 pl-4">
+                        {description}
                     </p>
-                </motion.div>
+
+                    {/* Stat / Consequence Box */}
+                    <div className={`flex items-center gap-4 bg-black/40 rounded-lg p-3 border border-white/5`}>
+                        <div className={`text-2xl font-mono font-bold ${t.text}`}>
+                            {stat}
+                        </div>
+                        <div className="h-8 w-px bg-white/10" />
+                        <div className="text-xs text-zinc-500 uppercase tracking-wider">
+                            {statLabel}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <motion.div variants={itemVariants} className="flex-1 w-full flex justify-center z-10">
-                <div className={`relative w-full max-w-md aspect-square rounded-2xl bg-obsidian bg-gradient-to-br from-white/5 to-transparent border border-white/10 flex items-center justify-center overflow-hidden group perspective-500 transition-all duration-500 hover:border-opacity-50 shadow-2xl ${colors.border}`}>
-                    <div className={`absolute inset-0 bg-[radial-gradient(circle_at_center,${theme === 'blue' ? '#3b82f6' : theme === 'red' ? '#ef4444' : theme === 'emerald' ? '#10b981' : '#a855f7'}_0%,transparent_70%)] opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />
-                    {icon}
+            {/* VISUAL / HOLOGRAPHIC ELEMENT - Ensure High Z to stay above beam if needed, but beam is z-0 so this is fine */}
+            <div className="flex-1 w-full flex justify-center items-center relative z-10">
+                <div className={`relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center rounded-full bg-gradient-to-br from-white/5 to-transparent border border-white/5 backdrop-blur-sm ${t.shadow} shadow-2xl transition-all duration-500 hover:scale-105 bg-[#050505]/80`}>
+                    {/* Inner Grid */}
+                    <div className="absolute inset-4 rounded-full border border-dashed border-white/10 animate-[spin_20s_linear_infinite]" />
+                    <div className="absolute inset-12 rounded-full border border-dotted border-white/10 animate-[spin_15s_linear_infinite_reverse]" />
+
+                    {/* The Visual Content */}
+                    <div className="relative z-10 scale-125">
+                        {visual}
+                    </div>
                 </div>
-            </motion.div>
+            </div>
         </motion.section>
     );
 };
 
-// --- Animated Icons ---
 
-const RosterIcon = () => { // Original Re-Added
-    const [index, setIndex] = useState(0);
-    useEffect(() => {
-        const interval = setInterval(() => setIndex(prev => (prev + 1) % 3), 1500);
-        return () => clearInterval(interval);
-    }, []);
+// --- VISUALS ---
 
-    return (
-        <div className="relative w-40 h-40 flex items-center justify-center">
-            <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 1.2, filter: "blur(10px)" }}
-                transition={{ duration: 0.4 }}
-                className="absolute"
-            >
-                {index === 0 && <Users className="w-32 h-32 text-blue-500/80" />}
-                {index === 1 && <Users className="w-32 h-32 text-purple-500/80" />}
-                {index === 2 && <AlertTriangle className="w-32 h-32 text-blue-300/80" />}
-            </motion.div>
-            <div className="absolute inset-x-0 bottom-0 text-center text-xs uppercase tracking-widest text-blue-400/50 mt-4">
-                Syncing Roster...
+const RosterVisual = () => (
+    <div className="relative flex items-center justify-center">
+        <Users className="w-20 h-20 text-blue-500 opacity-80" />
+        <div className="absolute -top-6 -right-6 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg transform rotate-12">OVERPAID</div>
+        <AlertOctagon className="absolute -bottom-2 -left-2 w-8 h-8 text-amber-500 fill-black/50" />
+    </div>
+);
+
+const ContentVisual = () => (
+    <div className="relative flex items-center justify-center">
+        <div className="relative">
+            <Video className="w-20 h-20 text-red-500 opacity-80" />
+            {/* Static Lines */}
+            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.8)_50%)] bg-[length:100%_4px] opacity-20 pointer-events-none" />
+        </div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center bg-black/80 border border-red-500/30 text-red-500 font-mono text-xs tracking-widest px-2 py-1 rotate-[-10deg]">
+            NO SIGNAL
+        </div>
+    </div>
+);
+
+const StrategicVisual = () => (
+    <div className="flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+            <BrainCircuit className="w-20 h-20 text-amber-500 opacity-80" />
+            <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-28 h-1 bg-amber-500 rotate-45 opacity-50" />
             </div>
         </div>
-    );
-};
+        <div className="bg-amber-900/50 border border-amber-500/20 text-amber-200 text-[10px] px-3 py-1.5 rounded font-mono shadow-lg backdrop-blur-md">
+            Analysis_Lag: 48h
+        </div>
+    </div>
+);
 
-const ContentIcon = () => { // Original Re-Added
-    return (
-        <div className="relative w-40 h-40 flex items-center justify-center overflow-hidden">
-            <motion.div
-                animate={{
-                    x: [0, -2, 2, -1, 1, 0],
-                    opacity: [1, 0.8, 1, 0.9, 1],
-                }}
-                transition={{
-                    duration: 0.2,
-                    repeat: Infinity,
-                    repeatDelay: Math.random() * 3
-                }}
-            >
-                <Video className="w-32 h-32 text-red-500/80" />
-            </motion.div>
-            {/* Scanlines */}
-            <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
-            <motion.div
-                className="absolute inset-0 bg-white/10"
-                animate={{ opacity: [0, 0.1, 0] }}
-                transition={{ duration: 0.1, repeat: Infinity, repeatDelay: 2 }}
-            />
-            <div className="absolute inset-x-0 top-0 text-center text-xs uppercase tracking-widest text-red-400/50">
-                NO SIGNAL
+const ValuationVisual = () => (
+    <div className="flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+            <ShieldAlert className="w-20 h-20 text-blue-400 opacity-80" />
+            <div className="absolute -right-4 top-0 flex flex-col gap-1">
+                <div className="w-12 h-1 bg-zinc-700/50 rounded" />
+                <div className="w-8 h-1 bg-zinc-700/50 rounded" />
+                <div className="w-10 h-1 bg-zinc-700/50 rounded" />
             </div>
         </div>
-    );
-};
-
-const StrategicIcon = () => { // Emerald
-    return (
-        <div className="relative w-40 h-40 flex items-center justify-center">
-            <motion.div
-                animate={{
-                    scale: [1, 1.1, 1],
-                    filter: ["drop-shadow(0 0 0px rgba(16,185,129,0))", "drop-shadow(0 0 20px rgba(16,185,129,0.5))", "drop-shadow(0 0 0px rgba(16,185,129,0))"]
-                }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-                <BrainCircuit className="w-32 h-32 text-emerald-500/80" />
-            </motion.div>
-            {/* Floating Binary */}
-            {[...Array(3)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute text-emerald-400/30 text-xs font-mono"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: -60, opacity: [0, 1, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.7, ease: "linear" }}
-                    style={{ left: `${30 + i * 20}%` }}
-                >
-                    {Math.random() > 0.5 ? '01' : '10'}
-                </motion.div>
-            ))}
-            <div className="absolute inset-x-0 bottom-0 text-center text-xs uppercase tracking-widest text-emerald-400/50 mt-4">
-                Manual Override
-            </div>
+        <div className="bg-zinc-900/80 border border-zinc-700/30 font-mono text-xs text-zinc-400 px-3 py-1.5 rounded shadow-lg backdrop-blur-md">
+            UNDEFINED
         </div>
-    );
-};
+    </div>
+);
 
-const ValuationIcon = () => { // Blue
-    return (
-        <div className="relative w-40 h-40 flex items-center justify-center">
-            {/* Flatlining Graph */}
-            <svg className="w-32 h-32 text-blue-500/80" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                <motion.path
-                    d="M 10 90 L 30 50 L 50 30 L 70 70 L 90 70"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                />
-                {/* Fading end line to represent mystery/fog */}
-                <motion.path
-                    d="M 90 70 L 120 70"
-                    strokeOpacity="0.2"
-                />
-            </svg>
-            <div className="absolute inset-x-0 bottom-0 text-center text-xs uppercase tracking-widest text-blue-400/50 mt-4">
-                Data Missing
-            </div>
-        </div>
-    );
-};
+const FirefightingVisual = () => (
+    <div className="relative flex items-center justify-center">
+        <Zap className="w-20 h-20 text-red-500 opacity-80" />
+        <div className="absolute inset-0 animate-pulse bg-red-500/20 blur-xl rounded-full" />
+    </div>
+);
 
-const FirefightingIcon = () => { // Red
-    return (
-        <div className="relative w-40 h-40 flex items-center justify-center">
-            <motion.div
-                animate={{ rotate: [0, 180, 180, 360], opacity: [0.8, 1, 0.8] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            >
-                <Hourglass className="w-32 h-32 text-red-500/80" />
-            </motion.div>
-            {/* Panic Pulse */}
-            <motion.div
-                className="absolute inset-0 bg-red-500/20 rounded-full blur-xl"
-                animate={{ scale: [0.8, 1.2, 0.8], opacity: [0, 0.5, 0] }}
-                transition={{ duration: 1, repeat: Infinity }}
-            />
-            <div className="absolute inset-x-0 bottom-0 text-center text-xs uppercase tracking-widest text-red-400/50 mt-4">
-                Time Critical
-            </div>
-        </div>
-    );
-};
-
-const EntropyIcon = () => { // Purple
-    // Fractured pieces
-    return (
-        <div className="relative w-40 h-40 flex items-center justify-center">
-            <motion.div
-                className="relative"
-            >
-                <Database className="w-32 h-32 text-purple-500/80" />
-                {/* Floating pieces drifting away */}
-                {[...Array(4)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute top-0 right-0 bg-purple-500/80 w-4 h-4 rounded-sm"
-                        initial={{ x: 0, y: 0, opacity: 1 }}
-                        animate={{
-                            x: Math.random() * 60 + 20,
-                            y: Math.random() * -60 - 20,
-                            opacity: 0,
-                            rotate: Math.random() * 360
-                        }}
-                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }}
-                    />
-                ))}
-            </motion.div>
-            <div className="absolute inset-x-0 bottom-0 text-center text-xs uppercase tracking-widest text-purple-400/50 mt-4">
-                Connection Lost
-            </div>
-        </div>
-    );
-};
+const EntropyVisual = () => (
+    <div className="relative flex items-center justify-center">
+        <Database className="w-20 h-20 text-purple-500 opacity-80" />
+        {/* Particles flying off */}
+        <div className="absolute top-0 right-0 w-3 h-3 bg-purple-500 rounded-sm animate-ping" />
+        <div className="absolute bottom-2 left-0 w-2 h-2 bg-purple-500 rounded-sm animate-bounce" />
+    </div>
+);

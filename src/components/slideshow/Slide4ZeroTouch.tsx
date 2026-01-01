@@ -38,6 +38,9 @@ export function Slide4ZeroTouch({ isActive, onNext, onBack }: SlideProps) {
 
                 <NavigationHeader onBack={onBack} />
 
+
+
+
                 {/* --- SECTION 1: FROM CHAOS TO ORDER (SPLIT REVEAL) --- */}
                 <HeroSection />
 
@@ -224,7 +227,7 @@ function PipelineSection() {
 
                     {/* STEP 1: INGESTION (SOURCES) */}
                     <div className="flex flex-col gap-4">
-                        {["DISCORD_LOGS", "RIOT_API_V4", "SCRIM_GOOGLE_SHEETS"].map((label, i) => (
+                        {["DISCORD_LOGS", "GOOGLE_DRIVE", "SCRIM_GOOGLE_SHEETS"].map((label, i) => (
                             <motion.div
                                 key={i}
                                 className="w-48 h-12 bg-[#0A0A0A] border border-white/10 rounded flex items-center px-4 gap-3 relative"
@@ -301,7 +304,7 @@ function DashboardSection() {
         <section className="relative min-h-screen flex items-center justify-center p-6 bg-[#050505] border-b border-white/5">
             <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
 
-                {/* Visual: The High-Fidelity Dashboard */}
+                {/* Visual: The Roster Intelligence Dashboard */}
                 <motion.div
                     className="md:col-span-2 bg-[#0A0A0A] rounded-xl border border-white/10 overflow-hidden shadow-2xl relative"
                     initial={{ opacity: 0, y: 40 }}
@@ -316,10 +319,10 @@ function DashboardSection() {
                             <span className="h-4 w-[1px] bg-white/10" />
                             <div className="flex items-center gap-2 text-white/40 text-[10px] uppercase font-mono">
                                 <Database className="w-3 h-3" />
-                                <span>LCS_SUMMER_2025</span>
+                                <span>ROSTER_DECISION_ENGINE_V2</span>
                             </div>
                         </div>
-                        <div className="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded border border-emerald-500/20">LIVE FEED</div>
+                        <div className="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded border border-emerald-500/20">ANALYSIS_COMPLETE</div>
                     </div>
 
                     {/* Main Content */}
@@ -327,46 +330,55 @@ function DashboardSection() {
                         {/* Sidebar details */}
                         <div className="col-span-1 space-y-4">
                             <div className="p-4 bg-white/5 rounded border border-white/5">
-                                <div className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Win Probability</div>
-                                <div className="text-3xl font-mono text-white">72.4%</div>
-                                <div className="text-xs text-emerald-400 mt-1 flex items-center gap-1">▲ 12.3% <span className="text-white/20">vs avg</span></div>
+                                <div className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Player Efficiency</div>
+                                <div className="text-3xl font-mono text-white">94.2</div>
+                                <div className="text-xs text-emerald-400 mt-1 flex items-center gap-1">Top 5% <span className="text-white/20">role rank</span></div>
                             </div>
                             <div className="p-4 bg-white/5 rounded border border-white/5">
-                                <div className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Gold Diff @ 15</div>
-                                <div className="text-3xl font-mono text-white">+2.1k</div>
-                                <div className="text-xs text-emerald-400 mt-1 flex items-center gap-1">▲ 0.8k <span className="text-white/20">vs avg</span></div>
+                                <div className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Contract Value</div>
+                                <div className="text-3xl font-mono text-white">$120k</div>
+                                <div className="text-xs text-emerald-400 mt-1 flex items-center gap-1">UNDERVALUED <span className="text-white/20">by 40%</span></div>
                             </div>
                         </div>
 
-                        {/* Main Graph */}
-                        <div className="col-span-2 bg-black rounded border border-white/5 p-4 relative overflow-hidden">
+                        {/* Main Graph / Decision Module */}
+                        <div className="col-span-2 bg-black rounded border border-white/5 p-4 relative overflow-hidden flex flex-col justify-between">
                             {/* Grid Background */}
-                            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                            <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.05)_1px,transparent_1px)] bg-[size:20px_20px]" />
 
-                            {/* The Line */}
-                            <svg className="w-full h-full relative z-10 overflow-visible">
-                                <motion.path
-                                    d="M 0,150 C 50,140 100,160 150,100 S 250,80 300,50 S 350,20 400,10"
-                                    fill="none"
-                                    stroke="#10B981"
-                                    strokeWidth="2"
-                                    initial={{ pathLength: 0 }}
-                                    whileInView={{ pathLength: 1 }}
-                                    transition={{ duration: 2, ease: "easeOut" }}
-                                />
-                                <circle cx="400" cy="10" r="4" className="fill-emerald-400 animate-ping" />
-                                <circle cx="400" cy="10" r="3" className="fill-white" />
-                            </svg>
+                            <div className="relative z-10 mb-4">
+                                <div className="text-[10px] text-white/40 uppercase tracking-widest mb-2">Performance Trajectory (vs Replacement)</div>
+                                <svg className="w-full h-24 overflow-visible">
+                                    <motion.path
+                                        d="M 0,80 C 50,70 100,80 150,50 S 250,40 300,20 S 350,10 400,5"
+                                        fill="none"
+                                        stroke="#10B981"
+                                        strokeWidth="2"
+                                        initial={{ pathLength: 0 }}
+                                        whileInView={{ pathLength: 1 }}
+                                        transition={{ duration: 2, ease: "easeOut" }}
+                                    />
+                                    {/* Baseline */}
+                                    <path d="M 0,60 L 400,60" stroke="#333" strokeDasharray="4 4" />
+                                </svg>
+                            </div>
 
-                            {/* Annotation */}
+                            {/* DECISION OUTPUT */}
                             <motion.div
-                                className="absolute top-4 right-4 bg-emerald-950/80 border border-emerald-500/30 p-2 rounded backdrop-blur-md"
-                                initial={{ opacity: 0, y: 10 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 1.5 }}
+                                className="relative z-10 bg-emerald-900/20 border border-emerald-500/30 p-4 rounded flex items-center justify-between"
+                                initial={{ scale: 0.95, opacity: 0 }}
+                                whileInView={{ scale: 1, opacity: 1 }}
+                                transition={{ delay: 1 }}
                             >
-                                <div className="text-[9px] text-emerald-300 font-mono">OBJECTIVE BOUNTY CLAIMED</div>
+                                <div>
+                                    <div className="text-[10px] text-emerald-400 font-mono mb-1">AI RECOMMENDATION</div>
+                                    <div className="text-xl font-bold text-white tracking-widest">EXTEND CONTRACT</div>
+                                </div>
+                                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
+                                    <Activity className="w-6 h-6 text-emerald-950" />
+                                </div>
                             </motion.div>
+
                         </div>
                     </div>
                 </motion.div>
@@ -376,13 +388,13 @@ function DashboardSection() {
                     <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
                         DECISIONS <br />
                         BASED ON <br />
-                        <span className="text-emerald-500">MATH.</span>
+                        <span className="text-emerald-500">DATA.</span>
                     </h2>
                     <p className="text-lg text-white/50">
-                        Gut feeling is a liability. We visualize your objective reality—gold diff, trade efficiency, vision score—in real-time.
+                        Stop guessing with your roster. We analyze performance vs cost, replacement value, and team synergy to give you the clear answer: <strong>Sign, Renew, or Drop.</strong>
                     </p>
                     <ul className="space-y-3">
-                        {["Draft Edge Calculation", "Live Win Probability", "Economy Tracking"].map((item, i) => (
+                        {["Contract Optimization", "Performance Forecasting", "Roster Construction"].map((item, i) => (
                             <li key={i} className="flex items-center gap-3 text-white/70">
                                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
                                 <span className="text-sm font-mono uppercase tracking-wider">{item}</span>
