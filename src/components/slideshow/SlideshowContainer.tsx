@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Slide1Hook } from "./Slide1Hook";
 import { Slide2Chaos } from "./Slide2Chaos";
 import { Slide3Blueprint } from "./Slide3Blueprint";
 import { Slide4ZeroTouch } from "./Slide4ZeroTouch";
 import { Slide5Growth } from "./Slide5Growth";
 import { Slide6External } from "./Slide6External";
-import { Slide5Watchtower } from "./Slide5Watchtower";
 import { Slide6ContentROI } from "./Slide6ContentROI";
 import { Slide7Proof } from "./Slide7Proof";
 import { Slide8Offer } from "./Slide8Offer";
+import { SlideProjectPhoenix } from "./SlideProjectPhoenix";
 
 export function SlideshowContainer() {
     const [currentSlide, setCurrentSlide] = useState(1);
@@ -90,15 +91,15 @@ export function SlideshowContainer() {
                 )}
 
                 {currentSlide === 7 && (
-                    <Slide5Watchtower key="slide7" isActive={true} onNext={handleNext} onBack={handleBack} />
+                    <Slide6ContentROI key="slide7" isActive={true} onNext={handleNext} onBack={handleBack} />
                 )}
 
                 {currentSlide === 8 && (
-                    <Slide6ContentROI key="slide8" isActive={true} onNext={handleNext} onBack={handleBack} />
+                    <Slide7Proof key="slide8" isActive={true} onNext={handleNext} onBack={handleBack} />
                 )}
 
                 {currentSlide === 9 && (
-                    <Slide7Proof key="slide9" isActive={true} onNext={handleNext} onBack={handleBack} />
+                    <SlideProjectPhoenix key="slide9" isActive={true} onNext={handleNext} onBack={handleBack} />
                 )}
 
                 {currentSlide === 10 && (
@@ -113,6 +114,31 @@ export function SlideshowContainer() {
                 initial={{ opacity: 0 }}
                 animate={isExiting1 ? { opacity: [0, 1, 0], transition: { duration: 0.8, delay: 1.2, times: [0, 0.5, 1] } } : { opacity: 0 }}
             />
-        </div>
+
+            {/* Global "Buzz" Navigation Arrows - Low Opacity */}
+            <div className="absolute inset-0 z-[60] pointer-events-none">
+                {/* Back Arrow (Bottom Left) */}
+                {currentSlide > 1 && (
+                    <button
+                        onClick={handleBack}
+                        className="fixed bottom-4 left-4 text-white/10 hover:text-white/50 transition-colors pointer-events-auto p-4"
+                        title="Quick Back"
+                    >
+                        <ArrowLeft className="w-6 h-6" />
+                    </button>
+                )}
+
+                {/* Next Arrow (Bottom Right) */}
+                {currentSlide < 10 && (
+                    <button
+                        onClick={handleNext}
+                        className="fixed bottom-4 right-4 text-white/10 hover:text-white/50 transition-colors pointer-events-auto p-4"
+                        title="Quick Next"
+                    >
+                        <ArrowRight className="w-6 h-6" />
+                    </button>
+                )}
+            </div>
+        </div >
     );
 }
