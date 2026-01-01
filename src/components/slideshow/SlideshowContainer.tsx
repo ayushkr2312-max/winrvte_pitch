@@ -117,6 +117,11 @@ export function SlideshowContainer() {
 
             {/* Global "Buzz" Navigation Arrows - Low Opacity */}
             <div className="absolute inset-0 z-[60] pointer-events-none">
+                {/* Page Number Marker */}
+                <div className="fixed top-8 right-8 font-mono text-[10px] text-white/20 tracking-[0.2em] pointer-events-none mix-blend-difference">
+                    {String(currentSlide).padStart(2, '0')} / 10
+                </div>
+
                 {/* Back Arrow (Bottom Left) */}
                 {currentSlide > 1 && (
                     <button

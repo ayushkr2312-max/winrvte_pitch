@@ -156,6 +156,114 @@ export function Slide6External({ isActive, onNext, onBack }: SlideProps) {
 
 
                 {/* --- SECTION 3: THE SIGNAL CONSTELLATION (CLEAN & DYNAMIC) --- */}
+
+                {/* --- SECTION 2.5: THE SCOUT'S EDGE (TALENT ACQUISITION) --- */}
+                {/* "Sign them before they are stars." -> Visualizing the career trajectory. */}
+                <section className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#050505] relative border-t border-white/5 overflow-hidden">
+
+                    {/* Background Grid - "Career Space" */}
+                    <div className="absolute inset-0 opacity-20 pointer-events-none">
+                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+                    </div>
+
+                    <div className="max-w-6xl w-full flex flex-col relative z-10">
+
+                        {/* Header */}
+                        <div className="text-center mb-16">
+                            <h3 className="text-4xl md:text-6xl font-black text-white mb-4 uppercase tracking-tighter">
+                                Discover the <span className="text-green-500">Undiscovered.</span>
+                            </h3>
+                            <p className="text-zinc-500 font-mono text-sm tracking-[0.2em] uppercase">
+                                Sign the next world champion <span className="text-white font-bold">before</span> the world knows their name.
+                            </p>
+                        </div>
+
+                        {/* THE CAREER TRAJECTORY GRAPH */}
+                        <div className="relative w-full h-[500px] border border-white/10 rounded-3xl bg-zinc-900/30 backdrop-blur-sm overflow-hidden group">
+
+                            {/* SVG Graph Surface */}
+                            <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="curveGradient" x1="0" y1="1" x2="0" y2="0">
+                                        <stop offset="0%" stopColor="rgba(34, 197, 94, 0)" />
+                                        <stop offset="100%" stopColor="rgba(34, 197, 94, 0.2)" />
+                                    </linearGradient>
+                                </defs>
+
+                                {/* 1. The Career Curve (Path) */}
+                                {/* Draws from bottom-left (Tier 3) to top-right (Tier 1) exponentially */}
+                                <path
+                                    d="M0,500 C200,500 400,450 600,250 S900,100 1200,50"
+                                    fill="url(#curveGradient)"
+                                    stroke="#22c55e"
+                                    strokeWidth="3"
+                                    className="drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                                />
+
+                                {/* 2. Dashed Baseline (Average Talent) */}
+                                <line x1="0" y1="450" x2="1200" y2="450" stroke="white" strokeWidth="1" strokeDasharray="5,5" opacity="0.1" />
+                            </svg>
+
+                            {/* --- INTERACTIVE MARKERS (Overlay) --- */}
+
+                            {/* MARKER 1: THE DISCOVERY (Early & Green) */}
+                            {/* Narrative: You find them in a Tier 3 tournament. */}
+                            <div className="absolute bottom-[100px] left-[15%] flex flex-col items-center group/marker transition-all duration-500 hover:scale-110 cursor-pointer">
+                                <div className="w-12 h-12 bg-zinc-900 border border-green-500 rounded-full flex items-center justify-center relative z-20 shadow-[0_0_20px_rgba(34,197,94,0.5)]">
+                                    <span className="text-xs font-bold text-green-500">?</span>
+                                </div>
+                                <div className="absolute inset-0 bg-green-500/30 blur-xl animate-pulse rounded-full" />
+
+                                {/* Scouting Card */}
+                                <div className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-zinc-900/95 border border-green-500/50 p-4 rounded-xl text-left backdrop-blur-md min-w-[180px] shadow-2xl">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                        <div className="text-[10px] text-green-400 font-mono uppercase tracking-widest">Winrvte Scouted</div>
+                                    </div>
+                                    <div className="text-sm font-bold text-white mb-1">Player: "FLAME"</div>
+                                    <div className="text-xs text-zinc-500 mb-2">League: Tier 3 (Unknown)</div>
+                                    <div className="py-1 px-2 bg-green-500/10 rounded border border-green-500/20 text-green-400 text-xs font-mono">
+                                        Contract: $12k / yr
+                                    </div>
+                                </div>
+                                {/* Vertical Drop Line */}
+                                <div className="h-[200px] w-px border-l border-green-500/30 border-dashed absolute top-6 pointer-events-none" />
+                            </div>
+
+                            {/* MARKER 2: THE HYPE (Late & Red) */}
+                            {/* Narrative: Competitors try to buy them after they win Worlds. */}
+                            <div className="absolute top-[80px] right-[20%] flex flex-col items-center group/marker transition-all duration-500 hover:scale-110 cursor-pointer">
+                                <div className="w-12 h-12 bg-zinc-900 border border-red-500 rounded-full flex items-center justify-center relative z-20 shadow-[0_0_20px_rgba(239,68,68,0.5)]">
+                                    <span className="text-xs font-bold text-red-500">★</span>
+                                </div>
+
+                                {/* Market Card */}
+                                <div className="absolute top-16 left-1/2 -translate-x-1/2 bg-zinc-900/95 border border-red-500/50 p-4 rounded-xl text-left backdrop-blur-md min-w-[180px] shadow-2xl">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-2 h-2 bg-red-500 rounded-full" />
+                                        <div className="text-[10px] text-red-400 font-mono uppercase tracking-widest">Market Hype</div>
+                                    </div>
+                                    <div className="text-sm font-bold text-white mb-1">Star: "FLAME"</div>
+                                    <div className="text-xs text-zinc-500 mb-2">Status: World Champion</div>
+                                    <div className="py-1 px-2 bg-red-500/10 rounded border border-red-500/20 text-red-400 text-xs font-mono">
+                                        Buyout: $2.4M
+                                    </div>
+                                </div>
+                                {/* Vertical Drop Line */}
+                                <div className="h-[340px] w-px border-l border-red-500/30 border-dashed absolute top-6 pointer-events-none" />
+                            </div>
+
+                            {/* THE NARRATIVE ARC LABEL */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+                                <div className="text-sm font-mono text-zinc-600 tracking-[0.5em] uppercase mb-2">Career Trajectory</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                {/* --- SECTION 3: THE SIGNAL CONSTELLATION (CLEAN & DYNAMIC) --- */}
                 <section className="relative min-h-screen flex items-center justify-center p-6 bg-[#050505] border-t border-white/5">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-20 w-full max-w-7xl items-center z-10">
 
