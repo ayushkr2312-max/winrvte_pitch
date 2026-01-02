@@ -39,7 +39,36 @@ export function Slide6ContentROI({ isActive, onNext, onBack }: SlideProps) {
 
                 {/* --- SECTION 1: THE PORTAL (HERO) --- */}
                 <section className="min-h-screen flex flex-col items-center justify-center p-6 md:p-20 relative overflow-hidden">
-                    <div className="text-center w-full max-w-5xl flex flex-col items-center animate-in fade-in zoom-in duration-1000">
+
+                    {/* NEW: THE LIVING LEDGER (Abstract Financial Data Flow) */}
+                    <div className="absolute inset-0 pointer-events-none flex items-end justify-center px-4 md:px-20 overflow-hidden opacity-100">
+                        {/* Inverted Vignette: significantly dimmed center (focus text), Clear edges (show bars) */}
+                        <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,rgba(2,2,2,0.85)_30%,transparent_100%)]" />
+
+                        {/* The Bars */}
+                        <div className="flex items-end justify-between w-full max-w-7xl h-full pb-20 opacity-60"> {/* Slightly reduced bar opacity since parent is 100% */}
+                            {[...Array(40)].map((_, i) => {
+                                const isGold = Math.random() > 0.8; // Occasional gold bars
+                                const heightBase = Math.random() * 40 + 10;
+                                return (
+                                    <motion.div
+                                        key={i}
+                                        className={`w-1 md:w-3 rounded-full ${isGold ? "bg-yellow-500/60 shadow-[0_0_20px_rgba(234,179,8,0.4)]" : "bg-emerald-500/40"}`}
+                                        initial={{ height: `${heightBase}%` }}
+                                        animate={{ height: [`${heightBase}%`, `${heightBase + 30}%`, `${heightBase}%`] }}
+                                        transition={{
+                                            duration: Math.random() * 4 + 3,
+                                            repeat: Infinity,
+                                            ease: "easeInOut",
+                                            delay: i * 0.05
+                                        }}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="text-center w-full max-w-5xl flex flex-col items-center animate-in fade-in zoom-in duration-1000 relative z-10">
 
                         {/* Status Indicator */}
                         <div className="mb-12 flex items-center gap-4">

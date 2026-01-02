@@ -76,129 +76,87 @@ function NavigationHeader({ onBack }: { onBack: () => void }) {
 
 function HeroSection() {
     return (
-        <section className="relative min-h-screen flex flex-col justify-center items-center px-6 border-b border-white/5">
-            <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <section className="relative min-h-screen flex flex-col justify-center items-center px-6 border-b border-white/5 overflow-hidden">
 
-                {/* Text Content */}
-                <div className="space-y-8 z-20 relative">
+            {/* --- MASSIVE BACKGROUND VISUAL: THE LOGIC CORE --- */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-80">
+                <div className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px]" style={{ perspective: "1000px" }}>
+
+                    {/* Ring 1: The Outer Perimeter (Slow Logic) */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
+                        className="absolute inset-0 border border-emerald-900/40 rounded-full"
+                        style={{ rotateX: "60deg" }}
+                        animate={{ rotateZ: 360 }}
+                        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
                     >
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-6">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-mono">System Optimized</span>
-                        </div>
-                        <h1 className="text-5xl md:text-7xl font-black text-white leading-[0.9] tracking-tighter mb-6 relative z-30">
-                            OPERATIONAL <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">SUPREMACY.</span>
-                        </h1>
-                        <p className="text-lg md:text-xl text-white/60 max-w-md leading-relaxed border-l-2 border-emerald-500/50 pl-6">
-                            We replace the chaos of DMs and spreadsheets with a single, automated operating system.
-                        </p>
+                        <div className="absolute inset-0 border border-dashed border-emerald-500/20 rounded-full" />
+                        {/* Data Blips on Ring */}
+                        <div className="absolute top-0 left-1/2 w-2 h-2 bg-emerald-500/60 rounded-full shadow-[0_0_10px_#10b981]" />
+                        <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-emerald-500/60 rounded-full shadow-[0_0_10px_#10b981]" />
                     </motion.div>
-                </div>
 
-                {/* Visual: The Transformation */}
-                <div className="relative h-[500px] w-full isolate">
-
-                    {/* Foreground Order (The Card) */}
+                    {/* Ring 2: The Processing Layer (Medium Speed) */}
                     <motion.div
-                        className="absolute inset-x-0 md:inset-x-auto md:right-0 md:w-[90%] top-4 bottom-4 bg-[#050505] rounded-2xl border border-emerald-500/30 shadow-[0_0_50px_rgba(16,185,129,0.1)] overflow-hidden flex flex-col z-10"
-                        initial={{ scale: 0.9, opacity: 0, x: 50 }}
-                        animate={{ scale: 1, opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5, duration: 0.8 }}
+                        className="absolute inset-[15%] border border-emerald-500/30 rounded-full"
+                        style={{ rotateX: "60deg" }}
+                        animate={{ rotateZ: -360 }}
+                        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                     >
-                        {/* Header */}
-                        <div className="h-10 border-b border-white/10 bg-white/5 flex items-center justify-between px-4">
-                            <span className="text-[10px] font-mono text-emerald-500/60 uppercase">Command_Core // Online</span>
-                            <div className="flex gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
-                            </div>
-                        </div>
-                        {/* Body - The Hyper-Reactor */}
-                        <div className="flex-1 flex items-center justify-center bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.05),transparent)] relative overflow-hidden">
-                            {/* Grid Scan Effect */}
-                            <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                        <div className="absolute inset-0 border-t border-l border-emerald-500/40 rounded-full" />
+                    </motion.div>
 
-                            {/* Main Concentric Container */}
-                            <div className="relative w-96 h-96 flex items-center justify-center">
+                    {/* Ring 3: The Core (Fast Speed) */}
+                    <motion.div
+                        className="absolute inset-[30%] border-[2px] border-emerald-500/20 rounded-full"
+                        style={{ rotateX: "60deg" }}
+                        animate={{ rotateZ: 360 }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    >
+                        <div className="absolute inset-0 border-t-[4px] border-emerald-500/60 rounded-full opacity-60" />
+                    </motion.div>
 
-                                {/* Ring 1: Outer Slow */}
-                                <motion.div
-                                    className="absolute top-1/2 left-1/2 w-64 h-64 border border-emerald-500/20 rounded-full"
-                                    style={{ x: "-50%", y: "-50%" }}
-                                    animate={{ rotate: 360, scale: [1, 1.02, 1] }}
-                                    transition={{ rotate: { duration: 20, repeat: Infinity, ease: "linear" }, scale: { duration: 4, repeat: Infinity } }}
-                                />
-                                {/* Ring 2: Dashed Medium */}
-                                <motion.div
-                                    className="absolute top-1/2 left-1/2 w-48 h-48 border border-dashed border-emerald-500/30 rounded-full"
-                                    style={{ x: "-50%", y: "-50%" }}
-                                    animate={{ rotate: -360 }}
-                                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                                />
-                                {/* Ring 3: Inner Fast with Gap */}
-                                <motion.div
-                                    className="absolute top-1/2 left-1/2 w-32 h-32 border-2 border-emerald-500/40 rounded-full border-t-transparent border-r-transparent"
-                                    style={{ x: "-50%", y: "-50%" }}
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                />
+                    {/* Central Pillar of Logic (Vertical Light) */}
+                    <div className="absolute top-1/2 left-1/2 w-[200px] h-[500px] -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-emerald-500/5 via-emerald-500/10 to-emerald-500/5 blur-3xl" />
 
-                                {/* Orbiting Particles Layer */}
-                                <motion.div
-                                    className="absolute top-1/2 left-1/2 w-40 h-40"
-                                    style={{ x: "-50%", y: "-50%" }}
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                                >
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_10px_#34d399]" />
-                                </motion.div>
-                                <motion.div
-                                    className="absolute top-1/2 left-1/2 w-56 h-56"
-                                    style={{ x: "-50%", y: "-50%" }}
-                                    animate={{ rotate: -360 }}
-                                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                                >
-                                    <div className="absolute bottom-0 right-1/2 translate-x-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_10px_#22d3ee]" />
-                                </motion.div>
-
-                                {/* Core */}
-                                <div className="relative z-10 flex flex-col items-center gap-4">
-                                    <motion.div
-                                        className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500 text-emerald-400 shadow-[0_0_40px_rgba(16,185,129,0.5)] backdrop-blur-sm"
-                                        animate={{ scale: [1, 1.1, 1], boxShadow: ["0 0 40px rgba(16,185,129,0.5)", "0 0 60px rgba(16,185,129,0.8)", "0 0 40px rgba(16,185,129,0.5)"] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                    >
-                                        <Activity className="w-10 h-10" />
-                                    </motion.div>
-                                    <motion.div
-                                        className="px-4 py-1.5 bg-emerald-950/80 border border-emerald-500/50 rounded backdrop-blur-md absolute -bottom-16 left-1/2 -translate-x-1/2 whitespace-nowrap"
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.5 }}
-                                    >
-                                        <div className="text-[10px] font-mono text-emerald-400 tracking-widest uppercase flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-blink" />
-                                            PERFORMANCE: <span className="font-bold text-white">MAXIMIZED</span>
-                                        </div>
-                                    </motion.div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Scanner Line Overlay */}
+                    {/* Floating Code Fragments */}
+                    {[...Array(5)].map((_, i) => (
                         <motion.div
-                            className="absolute inset-0 bg-gradient-to-b from-transparent via-emerald-500/10 to-transparent pointer-events-none"
-                            initial={{ top: "-100%" }}
-                            animate={{ top: "100%" }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                        />
-                    </motion.div>
+                            key={i}
+                            className="absolute top-1/2 left-1/2 text-[10px] font-mono text-emerald-500/40 whitespace-nowrap"
+                            initial={{ x: -50, y: -50, opacity: 0 }}
+                            animate={{
+                                x: (Math.random() - 0.5) * 600,
+                                y: (Math.random() - 0.5) * 400,
+                                opacity: [0, 1, 0]
+                            }}
+                            transition={{ duration: 5 + i, repeat: Infinity, ease: "linear" }}
+                        >
+                            {`SYS_OPT_0${i}x`} :: OK
+                        </motion.div>
+                    ))}
+
                 </div>
+            </div>
+
+            {/* --- FOREGROUND CONTENT (Centered) --- */}
+            <div className="relative z-10 text-center space-y-8 max-w-4xl">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#0A0A0A] border border-emerald-500/20 rounded-full mb-6 backdrop-blur-md">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-mono">System Optimized</span>
+                    </div>
+                    <h1 className="text-6xl md:text-9xl font-black text-white leading-[0.85] tracking-tighter mb-8">
+                        OPERATIONAL <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">SUPREMACY.</span>
+                    </h1>
+                    <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto leading-relaxed md:text-center">
+                        Management made easy.
+                    </p>
+                </motion.div>
             </div>
 
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/20">
@@ -349,6 +307,21 @@ function DashboardSection() {
                             <div className="relative z-10 mb-4">
                                 <div className="text-[10px] text-white/40 uppercase tracking-widest mb-2">Performance Trajectory (vs Replacement)</div>
                                 <svg className="w-full h-24 overflow-visible">
+                                    <defs>
+                                        <linearGradient id="graphGradient" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="0%" stopColor="#10B981" stopOpacity="0.2" />
+                                            <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
+                                        </linearGradient>
+                                    </defs>
+                                    {/* Area Fill */}
+                                    <motion.path
+                                        d="M 0,80 C 50,70 100,80 150,50 S 250,40 300,20 S 350,10 400,5 V 100 H 0 Z"
+                                        fill="url(#graphGradient)"
+                                        initial={{ opacity: 0 }}
+                                        whileInView={{ opacity: 1 }}
+                                        transition={{ duration: 1.5 }}
+                                    />
+                                    {/* Line Path */}
                                     <motion.path
                                         d="M 0,80 C 50,70 100,80 150,50 S 250,40 300,20 S 350,10 400,5"
                                         fill="none"
@@ -358,6 +331,32 @@ function DashboardSection() {
                                         whileInView={{ pathLength: 1 }}
                                         transition={{ duration: 2, ease: "easeOut" }}
                                     />
+
+                                    {/* Interactive Data Nodes */}
+                                    {[
+                                        { x: 150, y: 50, label: "Efficiency Breakout", val: "+24%" },
+                                        { x: 300, y: 20, label: "Peak Performance", val: "98.2" },
+                                        { x: 400, y: 5, label: "Projected Ceiling", val: "MAX" }
+                                    ].map((point, i) => (
+                                        <motion.g
+                                            key={i}
+                                            initial={{ opacity: 0, scale: 0 }}
+                                            whileInView={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 2 + (i * 0.3) }}
+                                        >
+                                            <circle cx={point.x} cy={point.y} r="4" fill="#050505" stroke="#10B981" strokeWidth="2" className="cursor-pointer hover:fill-emerald-500 transition-colors" />
+                                            <circle cx={point.x} cy={point.y} r="8" fill="transparent" stroke="#10B981" strokeOpacity="0.3" className="animate-pulse" />
+
+                                            {/* Hover Label (Simple Visual) */}
+                                            <g className="opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-auto cursor-help">
+                                                <rect x={point.x - 40} y={point.y - 35} width="80" height="25" rx="4" fill="#0A0A0A" stroke="#10B981" strokeWidth="0.5" />
+                                                <text x={point.x} y={point.y - 20} textAnchor="middle" fill="#10B981" fontSize="8" fontFamily="monospace">{point.val}</text>
+                                                {/* Invisible hit area for easier hover */}
+                                                <circle cx={point.x} cy={point.y} r="15" fill="transparent" />
+                                            </g>
+                                        </motion.g>
+                                    ))}
+
                                     {/* Baseline */}
                                     <path d="M 0,60 L 400,60" stroke="#333" strokeDasharray="4 4" />
                                 </svg>

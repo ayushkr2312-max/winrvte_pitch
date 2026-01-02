@@ -258,16 +258,34 @@ export function SlideProjectPhoenix({ isActive, onBack, onNext }: SlideProps) {
                 </div>
 
                 {/* Section 4: FINAL CTA */}
-                <div className="absolute top-[300vh] h-screen w-full flex flex-col items-center justify-center p-10 bg-black/90 pointer-events-auto z-30">
+                <div className="absolute top-[300vh] h-screen w-full flex flex-col items-center justify-center p-10 bg-black/90 pointer-events-auto z-30 overflow-hidden">
+                    {/* Confetti Explosion */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        {[...Array(20)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                className={`absolute left-1/2 top-1/2 w-2 h-2 rounded-full ${i % 2 === 0 ? 'bg-blue-500' : 'bg-white'}`}
+                                initial={{ scale: 0, x: 0, y: 0 }}
+                                whileInView={{
+                                    scale: [0, 1, 0],
+                                    x: (Math.random() - 0.5) * 800,
+                                    y: (Math.random() - 0.5) * 800,
+                                    rotate: Math.random() * 360
+                                }}
+                                transition={{ duration: 2, ease: "easeOut", delay: 0.2 }}
+                            />
+                        ))}
+                    </div>
+
                     <motion.h2
-                        className="text-6xl md:text-8xl font-brand font-black text-white mb-12 text-center"
+                        className="text-6xl md:text-8xl font-brand font-black text-white mb-12 text-center relative z-10"
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                     >
                         YOU ARE <span className="text-blue-500">NEXT.</span>
                     </motion.h2>
 
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 relative z-10">
                         <Button
                             className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-6 text-lg tracking-widest"
                             onClick={onNext}

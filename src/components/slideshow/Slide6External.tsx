@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChevronDown, Radar, User, ShieldAlert, Zap, Check, Search, Crosshair, BarChart2, Cpu, Scan, Target, AlertTriangle, Layers, Database, Palette, Video, Gavel, Network, Users, LayoutGrid, Globe } from "lucide-react";
+import { ArrowLeft, ChevronDown, Radar, User, ShieldAlert, Zap, Check, Search, Crosshair, BarChart2, Cpu, Scan, Target, AlertTriangle, Layers, Database, Palette, Video, Gavel, Network, Users, LayoutGrid, Globe, TrendingUp, Activity } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useRef, useState, useEffect } from "react";
 
@@ -115,8 +115,42 @@ export function Slide6External({ isActive, onNext, onBack }: SlideProps) {
                 <section className="relative min-h-screen flex flex-col items-center justify-center p-6 md:p-20 z-20 overflow-hidden pointer-events-none">
                     <motion.div style={{ opacity: heroOpacity }} className="text-center w-full flex flex-col items-center">
                         <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
-                            <div className="relative w-[80vw] h-[80vw] border-[1px] border-blue-500/20 rounded-full flex items-center justify-center">
-                                <motion.div className="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,transparent_270deg,rgba(0,191,255,0.3)_360deg)]" animate={{ rotate: 360 }} transition={{ duration: 8, repeat: Infinity, ease: "linear" }} />
+                            <div className="relative w-[80vw] h-[80vw] md:w-[60vw] md:h-[60vw] border border-blue-500/20 rounded-full flex items-center justify-center">
+                                {/* Tactical Grid */}
+                                <div className="absolute inset-[15%] border border-blue-500/10 rounded-full" />
+                                <div className="absolute inset-[30%] border border-blue-500/10 rounded-full" />
+                                <div className="absolute inset-[45%] border border-blue-500/10 rounded-full" />
+                                <div className="absolute inset-0 border-r border-transparent border-t border-blue-500/10" />
+                                <div className="absolute inset-0 border-l border-transparent border-b border-blue-500/10" />
+
+                                {/* The Sweep */}
+                                <motion.div
+                                    className="absolute inset-0 rounded-full"
+                                    style={{ background: "conic-gradient(from 0deg, transparent 270deg, rgba(59,130,246,0.1) 320deg, rgba(59,130,246,0.5) 360deg)" }}
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                />
+
+                                {/* Detected Blips */}
+                                {[...Array(5)].map((_, i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="absolute w-3 h-3 bg-blue-400 rounded-full shadow-[0_0_15px_#60A5FA]"
+                                        style={{
+                                            top: `${20 + Math.random() * 60}%`,
+                                            left: `${20 + Math.random() * 60}%`
+                                        }}
+                                        animate={{ opacity: [0, 1, 0, 0], scale: [0.5, 1.5, 0.5] }}
+                                        transition={{
+                                            duration: 4,
+                                            repeat: Infinity,
+                                            delay: i * 0.8,
+                                            ease: "easeInOut"
+                                        }}
+                                    >
+                                        <div className="absolute inset-0 border border-blue-400 rounded-full animate-ping" />
+                                    </motion.div>
+                                ))}
                             </div>
                         </div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded border border-blue-500/50 bg-blue-500/10 text-blue-400 text-xs font-mono mb-6">
@@ -135,21 +169,41 @@ export function Slide6External({ isActive, onNext, onBack }: SlideProps) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-20 w-full max-w-7xl items-center z-10">
                         <motion.div className="w-full bg-[#111] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative" initial={{ x: -50, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ duration: 0.8 }}>
                             <div className="h-12 bg-white/5 border-b border-white/10 flex items-center justify-between px-4">
-                                <div className="flex items-center gap-2 text-xs font-mono text-gray-400"><Database className="w-3 h-3 text-blue-500" /><span>SHADOW_ROSTER_DB</span></div>
-                                <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /><span className="text-[10px] font-bold text-emerald-500">ONLINE</span></div>
+                                <div className="flex items-center gap-2 text-xs font-mono text-gray-400"><Database className="w-3 h-3 text-blue-500" /><span>OPPORTUNITY_RADAR_V1</span></div>
+                                <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /><span className="text-[10px] font-bold text-emerald-500">Scanning...</span></div>
                             </div>
                             <div className="p-4 space-y-3">
-                                {[{ name: "VORTEX", role: "Duelist", rating: "S+", status: "Free Agent", match: "98%" }, { name: "KAIROS", role: "Controller", rating: "A", status: "Buyout: $5k", match: "92%" }, { name: "ONYX", role: "IGL", rating: "S", status: "In Talks", match: "88%" }].map((player, i) => (
+                                {[
+                                    { type: "HIDDEN_GEM", detail: "Top 0.1% Duelist (T3)", alert: "UNDERVALUED", match: "Sign Free" },
+                                    { type: "QUALIFIER_GAP", detail: "Winter Cup Route", alert: "EASY PATH", match: "High Win %" },
+                                    { type: "META_SHIFT", detail: "Double Controller", alert: "TRENDING", match: "+15% WR" }
+                                ].map((item, i) => (
                                     <div key={i} className={`p-4 rounded-lg border flex items-center justify-between group cursor-pointer transition-all hover:scale-[1.02] ${i === 0 ? 'bg-blue-500/10 border-blue-500/50' : 'bg-black border-white/5 hover:border-white/20'}`}>
-                                        <div className="flex items-center gap-4"><div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center relative overflow-hidden"><User className="w-6 h-6 text-gray-400" />{i === 0 && <div className="absolute inset-0 bg-blue-500/20" />}</div><div><div className="text-sm font-bold text-white flex items-center gap-2">{player.name}{i === 0 && <span className="bg-blue-500 text-black text-[9px] px-1 rounded font-bold">BEST FIT</span>}</div><div className="text-[10px] text-gray-500 font-mono uppercase">{player.role} // {player.status}</div></div></div><div className="text-right"><div className="text-xs text-gray-500">MATCH</div><div className={`text-lg font-bold font-mono ${i === 0 ? 'text-blue-400' : 'text-white'}`}>{player.match}</div></div>
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center relative overflow-hidden">
+                                                {i === 0 ? <User className="w-5 h-5 text-blue-400" /> : i === 1 ? <TrendingUp className="w-5 h-5 text-emerald-400" /> : <Activity className="w-5 h-5 text-amber-400" />}
+                                                {i === 0 && <div className="absolute inset-0 bg-blue-500/20" />}
+                                            </div>
+                                            <div>
+                                                <div className="text-sm font-bold text-white flex items-center gap-2">
+                                                    {item.type}
+                                                    <span className={`text-[9px] px-1 rounded font-bold ${i === 0 ? 'bg-blue-500 text-black' : 'bg-white/10 text-white/50'}`}>{item.alert}</span>
+                                                </div>
+                                                <div className="text-[10px] text-gray-500 font-mono uppercase">{item.detail}</div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-xs text-gray-500">ACTION</div>
+                                            <div className={`text-sm font-bold font-mono ${i === 0 ? 'text-blue-400' : 'text-white'}`}>{item.match}</div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         </motion.div>
                         <div className="space-y-8">
-                            <motion.div className="inline-flex items-center gap-2 text-blue-500 font-mono text-xs uppercase tracking-widest" initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }}><Scan className="w-4 h-4" /> <span>Talent Pipeline</span></motion.div>
-                            <motion.h2 className="text-5xl md:text-6xl font-black text-white leading-tight">NEVER PANIC <br /> <span className="text-blue-500">HIRE AGAIN.</span></motion.h2>
-                            <motion.p className="text-xl text-white/60 font-light leading-relaxed">We maintain a <span className="text-white font-bold">Shadow Roster</span> of filtered, vetted talent ready to deploy. Player leaves? Code red? <span className="text-white underline decoration-blue-500/50 underline-offset-4">We have 3 replacements ready within the hour.</span></motion.p>
+                            <motion.div className="inline-flex items-center gap-2 text-blue-500 font-mono text-xs uppercase tracking-widest" initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }}><Scan className="w-4 h-4" /> <span>Market Intelligence</span></motion.div>
+                            <motion.h2 className="text-5xl md:text-6xl font-black text-white leading-tight">STOP PLAYING <br /> <span className="text-blue-500">BLIND.</span></motion.h2>
+                            <motion.p className="text-xl text-white/60 font-light leading-relaxed">Most orgs only see what's in front of them. We scan the entire ecosystem to find <span className="text-white font-bold">undervalued talent</span>, <span className="text-white font-bold">open qualifiers</span>, and <span className="text-white font-bold">meta shifts</span> before your competition does.</motion.p>
                         </div>
                     </div>
                 </section>

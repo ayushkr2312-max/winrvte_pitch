@@ -58,23 +58,102 @@ export function Slide5Growth({ isActive, onNext, onBack }: SlideProps) {
                 {/* --- SECTION 1: HERO - "THE GLOBAL BRAIN" --- */}
                 <section className="relative min-h-screen flex flex-col items-center justify-center p-6 overflow-hidden">
 
-                    {/* Background Globe Visual */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-                        <div className="relative w-[800px] h-[800px] rounded-full border border-white/10 animate-[spin_60s_linear_infinite]">
-                            {/* Meridians */}
-                            <div className="absolute inset-0 rounded-full border border-white/5 rotate-45" />
-                            <div className="absolute inset-0 rounded-full border border-white/5 -rotate-45" />
-                            <div className="absolute inset-20 rounded-full border border-white/5" />
-                            <div className="absolute inset-40 rounded-full border border-white/5" />
+                    {/* Background Visual: 3D Globe Structure */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ perspective: "1000px" }}>
+                        <motion.div
+                            className="relative w-[500px] h-[500px] md:w-[700px] md:h-[700px]"
+                            style={{ transformStyle: "preserve-3d" }}
+                            animate={{ rotateY: 360, rotateZ: 15 }} // Tilt and Spin
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                        >
+                            {/* SOLID CORE (Occlusion Layer) */}
+                            <div className="absolute inset-[5%] rounded-full bg-black shadow-[inset_0_0_100px_rgba(255,255,255,0.1)]" style={{ transform: "translateZ(-1px)" }} />
 
-                            {/* Data Packets */}
-                            <motion.div
-                                className="absolute w-2 h-2 bg-emerald-500 rounded-full blur-[2px]"
-                                animate={{ offsetDistance: "0%" }}
-                                style={{ offsetPath: "path('M 400 0 A 400 400 0 0 1 400 800 A 400 400 0 0 1 400 0')" }} // Orbit path roughly
-                                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                            />
-                        </div>
+                            {/* --- WIREFRAME SKELETON --- */}
+
+                            {/* Longitudes (Vertical Rings) */}
+                            {[0, 45, 90, 135].map((deg, i) => (
+                                <div
+                                    key={`long-${i}`}
+                                    className="absolute inset-0 rounded-full border-[2px] border-white/20"
+                                    style={{ transform: `rotateY(${deg}deg)` }}
+                                />
+                            ))}
+
+                            {/* Latitudes (Horizontal Rings) */}
+                            {/* Equator */}
+                            <div className="absolute inset-0 rounded-full border-[2px] border-white/20" style={{ transform: "rotateX(90deg)" }} />
+                            {/* Tropics */}
+                            <div className="absolute inset-[15%] rounded-full border border-white/10" style={{ transform: "rotateX(90deg) translateZ(150px)" }} />
+                            <div className="absolute inset-[15%] rounded-full border border-white/10" style={{ transform: "rotateX(90deg) translateZ(-150px)" }} />
+
+
+                            {/* --- ACTIVE NETWORK PULSES (Data flowing ON the grid) --- */}
+
+                            {/* Longitude Pulses */}
+                            {[0, 45, 90, 135].map((deg, i) => (
+                                <div key={`long-pulse-${i}`} className="absolute inset-0" style={{ transform: `rotateY(${deg}deg)` }}>
+                                    <motion.div
+                                        className="absolute inset-0 rounded-full border-t-[2px] border-emerald-400/30 opacity-10"
+                                        style={{ borderRight: "2px solid transparent", borderBottom: "2px solid transparent", borderLeft: "2px solid transparent" }}
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 3 + i, repeat: Infinity, ease: "linear" }}
+                                    />
+                                    <motion.div
+                                        className="absolute inset-0 rounded-full border-b-[2px] border-white/20 opacity-[0.02]"
+                                        style={{ borderRight: "2px solid transparent", borderTop: "2px solid transparent", borderLeft: "2px solid transparent" }}
+                                        animate={{ rotate: -360 }}
+                                        transition={{ duration: 5 + i, repeat: Infinity, ease: "linear" }}
+                                    />
+                                </div>
+                            ))}
+
+                            {/* Latitude Pulses */}
+                            {/* Equator Pulse */}
+                            <div className="absolute inset-0" style={{ transform: "rotateX(90deg)" }}>
+                                <motion.div
+                                    className="absolute inset-0 rounded-full border-t-[2px] border-emerald-400/30 opacity-10"
+                                    style={{ borderRight: "2px solid transparent", borderBottom: "2px solid transparent", borderLeft: "2px solid transparent" }}
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                />
+                            </div>
+
+                            {/* Tropics Pulses */}
+                            <div className="absolute inset-[15%]" style={{ transform: "rotateX(90deg) translateZ(150px)" }}>
+                                <motion.div
+                                    className="absolute inset-0 rounded-full border-t-[1px] border-white/10 opacity-[0.02]"
+                                    style={{ borderRight: "1px solid transparent", borderBottom: "1px solid transparent", borderLeft: "1px solid transparent" }}
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                                />
+                            </div>
+                            <div className="absolute inset-[15%]" style={{ transform: "rotateX(90deg) translateZ(-150px)" }}>
+                                <motion.div
+                                    className="absolute inset-0 rounded-full border-t-[1px] border-white/10 opacity-[0.02]"
+                                    style={{ borderRight: "1px solid transparent", borderBottom: "1px solid transparent", borderLeft: "1px solid transparent" }}
+                                    animate={{ rotate: -360 }}
+                                    transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
+                                />
+                            </div>
+
+                            {/* --- DYNAMIC DATA POINTS --- */}
+                            {[...Array(6)].map((_, i) => (
+                                <motion.div
+                                    key={`node-${i}`}
+                                    className="absolute w-3 h-3 bg-white rounded-full shadow-[0_0_15px_white]"
+                                    style={{
+                                        top: "50%", left: "50%",
+                                        transform: `rotateY(${i * 60}deg) rotateX(${i * 30}deg) translateZ(350px)` // Float outside
+                                    }}
+                                    animate={{ opacity: [0.2, 1, 0.2], scale: [0.8, 1.2, 0.8] }}
+                                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.5 }}
+                                />
+                            ))}
+                        </motion.div>
+
+                        {/* Static Halo */}
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,0,0,0.8)_100%)]" />
                     </div>
 
                     <motion.div
@@ -108,7 +187,7 @@ export function Slide5Growth({ isActive, onNext, onBack }: SlideProps) {
                         </h1>
 
                         <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto leading-relaxed font-light">
-                            We map your entire digital footprint in real-time. Control the narrative from a single source of truth.
+                            Your Social Media. Engineered.
                         </p>
                     </motion.div>
 
@@ -301,7 +380,7 @@ export function Slide5Growth({ isActive, onNext, onBack }: SlideProps) {
                     <div className="max-w-4xl w-full text-center mb-16 px-4">
                         <h2 className="text-5xl font-bold mb-6">FROM CHAOS TO <span className="text-emerald-500">CLARITY.</span></h2>
                         <p className="text-xl text-white/60 font-light">
-                            We mint raw data into verified assets. Your weekly "Growth Intelligence" brief is designed for one thing: Building trust with stakeholders.
+                            We mint raw data into verified assets. Your "Growth Intelligence" brief is designed for one thing: Validating your investment.
                         </p>
                     </div>
 

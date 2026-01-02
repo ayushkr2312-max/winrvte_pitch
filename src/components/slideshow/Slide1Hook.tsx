@@ -128,19 +128,23 @@ export function Slide1Hook({ onInitialize, isExiting }: Slide1Props) {
                     <motion.div
                         className="flex items-center justify-center gap-2 md:gap-4 cursor-default"
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1 }}
+                        animate={{ opacity: [0, 0.3, 0.1, 1] }} // Engine Start Flicker
+                        transition={{ duration: 1.5, times: [0, 0.4, 0.5, 1] }}
                         whileHover={{
                             scale: 1.05,
-                            y: -10,
-                            filter: "drop-shadow(0 0 30px rgba(34,211,238,0.4))"
+                            y: -5,
+                            filter: "drop-shadow(0 0 40px rgba(34,211,238,0.6))",
+                            transition: {
+                                scale: { duration: 0.2 },
+                                y: { duration: 0.2 }
+                            }
                         }}
                     >
                         {/* W-I-N (LIGHT BLUE, NO DEFAULT GLOW) */}
                         <motion.span
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, ease: "backOut" }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8, ease: "backOut", delay: 0.2 }}
                             className="text-[15vw] md:text-[11rem] font-brand font-black tracking-[0.1em] leading-none text-cyan-400"
                         >
                             WIN
@@ -148,9 +152,9 @@ export function Slide1Hook({ onInitialize, isExiting }: Slide1Props) {
 
                         {/* R-V-T-E (WHITE) */}
                         <motion.span
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, ease: "backOut", delay: 0.2 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8, ease: "backOut", delay: 0.4 }}
                             className="text-[15vw] md:text-[11rem] font-brand font-black tracking-[0.1em] leading-none text-white flex items-center"
                         >
                             R
