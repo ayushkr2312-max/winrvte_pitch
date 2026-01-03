@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Slide1Hook } from "./Slide1Hook";
-import { Slide2Chaos } from "./Slide2Chaos";
-import { Slide3Blueprint } from "./Slide3Blueprint";
-import { Slide4ZeroTouch } from "./Slide4ZeroTouch";
-import { Slide5Growth } from "./Slide5Growth";
-import { Slide6External } from "./Slide6External";
-import { Slide6ContentROI } from "./Slide6ContentROI";
-import { Slide7Proof } from "./Slide7Proof";
-import { Slide8Offer } from "./Slide8Offer";
-import { SlideProjectPhoenix } from "./SlideProjectPhoenix";
+
+// Lazy Load Heavy Slides
+const Slide2Chaos = lazy(() => import("./Slide2Chaos").then(m => ({ default: m.Slide2Chaos })));
+const Slide3Blueprint = lazy(() => import("./Slide3Blueprint").then(m => ({ default: m.Slide3Blueprint })));
+const Slide4ZeroTouch = lazy(() => import("./Slide4ZeroTouch").then(m => ({ default: m.Slide4ZeroTouch })));
+const Slide5Growth = lazy(() => import("./Slide5Growth").then(m => ({ default: m.Slide5Growth })));
+const Slide6External = lazy(() => import("./Slide6External").then(m => ({ default: m.Slide6External })));
+const Slide6ContentROI = lazy(() => import("./Slide6ContentROI").then(m => ({ default: m.Slide6ContentROI })));
+const Slide7Proof = lazy(() => import("./Slide7Proof").then(m => ({ default: m.Slide7Proof })));
+const Slide8Offer = lazy(() => import("./Slide8Offer").then(m => ({ default: m.Slide8Offer })));
+const SlideProjectPhoenix = lazy(() => import("./SlideProjectPhoenix").then(m => ({ default: m.SlideProjectPhoenix })));
 
 const CHAPTER_TITLES: Record<number, string> = {
     1: "THE HOOK",
@@ -62,7 +64,6 @@ export function SlideshowContainer() {
     const [direction, setDirection] = useState(0);
     const [isExiting1, setIsExiting1] = useState(false);
 
-    // Special transition from Hook (1) to Chaos (2)
     const handleInitialize = () => {
         setIsExiting1(true);
         setTimeout(() => {
@@ -77,7 +78,6 @@ export function SlideshowContainer() {
     };
 
     const handleBack = () => {
-        // If going back to Slide 1 from Slide 2
         if (currentSlide === 2) {
             setIsExiting1(false);
             setDirection(-1);
@@ -106,48 +106,69 @@ export function SlideshowContainer() {
                     exit="exit"
                     className="absolute inset-0 w-full h-full"
                 >
-                    {currentSlide === 1 && (
-                        <Slide1Hook
-                            isExiting={isExiting1}
-                            onInitialize={handleInitialize}
-                        />
-                    )}
-
-                    {currentSlide === 2 && (
-                        <Slide2Chaos
-                            isActive={true}
-                            onBack={handleBack}
-                            onNext={handleNext}
-                        />
-                    )}
-
-                    {currentSlide === 3 && (
-                        <Slide3Blueprint isActive={true} onNext={handleNext} onBack={handleBack} />
-                    )}
-
-                    {currentSlide === 4 && (
-                        <Slide4ZeroTouch isActive={true} onNext={handleNext} onBack={handleBack} />
-                    )}
-
-                    {currentSlide === 5 && (
-                        <Slide5Growth isActive={true} onNext={handleNext} onBack={handleBack} />
-                    )}
-
-                    {currentSlide === 6 && (
-                        <Slide6External isActive={true} onNext={handleNext} onBack={handleBack} />
-                    )}
-
-                    {currentSlide === 7 && (
-                        <Slide6ContentROI isActive={true} onNext={handleNext} onBack={handleBack} />
-                    )}
-
-                    {currentSlide === 8 && (
-                        <SlideProjectPhoenix isActive={true} onNext={handleNext} onBack={handleBack} />
-                    )}
-
-                    {currentSlide === 9 && (
-                        <Slide8Offer isActive={true} onBack={handleBack} />
-                    )}
+                    <Suspense fallback={<LoadingFallback />}>
+                        {currentSlide === 1 && (
+                            <Slide1Hook
+                                onInitialize={handleInitialize}
+                                isExiting={isExiting1}
+                            />
+                        )}
+                        {currentSlide === 2 && (
+                            <Slide2Chaos
+                                isActive={currentSlide === 2}
+                                onBack={handleBack}
+                                onNext={handleNext}
+                            />
+                        )}
+                        {currentSlide === 3 && (
+                            <Slide3Blueprint
+                                isActive={currentSlide === 3}
+                                onBack={handleBack}
+                                onNext={handleNext}
+                            />
+                        )}
+                        {currentSlide === 4 && (
+                            <Slide4ZeroTouch
+                                isActive={currentSlide === 4}
+                                onBack={handleBack}
+                                onNext={handleNext}
+                            />
+                        )}
+                        {currentSlide === 5 && (
+                            <Slide5Growth
+                                isActive={currentSlide === 5}
+                                onBack={handleBack}
+                                onNext={handleNext}
+                            />
+                        )}
+                        {currentSlide === 6 && (
+                            <Slide6External
+                                isActive={currentSlide === 6}
+                                onBack={handleBack}
+                                onNext={handleNext}
+                            />
+                        )}
+                        {currentSlide === 7 && (
+                            <Slide6ContentROI
+                                isActive={currentSlide === 7}
+                                onBack={handleBack}
+                                onNext={handleNext}
+                            />
+                        )}
+                        {currentSlide === 8 && (
+                            <SlideProjectPhoenix
+                                isActive={currentSlide === 8}
+                                onBack={handleBack}
+                                onNext={handleNext}
+                            />
+                        )}
+                        {currentSlide === 9 && (
+                            <Slide8Offer
+                                isActive={currentSlide === 9}
+                                onBack={handleBack}
+                            />
+                        )}
+                    </Suspense>
                 </motion.div>
             </AnimatePresence>
 
@@ -203,14 +224,18 @@ export function SlideshowContainer() {
                 <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay"
                     style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
                 />
-
-                {/* 2. Cinematic Vignette (Focus Center) */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_90%,rgba(0,0,0,0.8)_100%)] mix-blend-multiply" />
-
-                {/* 3. Micro Scanlines (Texture) */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0),rgba(255,255,255,0)_50%,rgba(0,0,0,0.1)_50%,rgba(0,0,0,0.1))] bg-[size:100%_2px] opacity-[0.1] mix-blend-overlay" />
             </div>
+        </div>
+    );
+}
 
-        </div >
+function LoadingFallback() {
+    return (
+        <div className="flex items-center justify-center w-full h-full bg-black text-emerald-500 font-mono tracking-widest text-sm uppercase">
+            <div className="flex flex-col items-center gap-4">
+                <div className="w-8 h-8 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
+                <span className="animate-pulse">System Initializing...</span>
+            </div>
+        </div>
     );
 }
