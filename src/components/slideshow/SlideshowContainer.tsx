@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useTransition } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Slide1Hook } from "./Slide1Hook";
@@ -63,29 +63,36 @@ export function SlideshowContainer() {
     const [currentSlide, setCurrentSlide] = useState(1);
     const [direction, setDirection] = useState(0);
     const [isExiting1, setIsExiting1] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
     const handleInitialize = () => {
         setIsExiting1(true);
         setTimeout(() => {
-            setDirection(1);
-            setCurrentSlide(2);
+            startTransition(() => {
+                setDirection(1);
+                setCurrentSlide(2);
+            });
         }, 1500);
     };
 
     const handleNext = () => {
-        setDirection(1);
-        setCurrentSlide((prev) => prev + 1);
+        startTransition(() => {
+            setDirection(1);
+            setCurrentSlide((prev) => prev + 1);
+        });
     };
 
     const handleBack = () => {
-        if (currentSlide === 2) {
-            setIsExiting1(false);
-            setDirection(-1);
-            setCurrentSlide(1);
-        } else {
-            setDirection(-1);
-            setCurrentSlide((prev) => prev - 1);
-        }
+        startTransition(() => {
+            if (currentSlide === 2) {
+                setIsExiting1(false);
+                setDirection(-1);
+                setCurrentSlide(1);
+            } else {
+                setDirection(-1);
+                setCurrentSlide((prev) => prev - 1);
+            }
+        });
     };
 
     return (
@@ -106,7 +113,7 @@ export function SlideshowContainer() {
                     exit="exit"
                     className="absolute inset-0 w-full h-full"
                 >
-                    <Suspense fallback={<LoadingFallback />}>
+                    <Suspense fallback={null}>
                         {currentSlide === 1 && (
                             <Slide1Hook
                                 onInitialize={handleInitialize}
@@ -179,6 +186,9 @@ export function SlideshowContainer() {
                 animate={isExiting1 ? { opacity: [0, 1, 0], transition: { duration: 0.8, delay: 1.2, times: [0, 0.5, 1] } } : { opacity: 0 }}
             />
 
+            {/* Transition Overlay (Visible during lazy load pending) */}
+            <TransitionOverlay isPending={isPending} />
+
             {/* TACTICAL HUD - Chapter Status */}
             <div className="fixed top-8 right-8 z-[60] flex flex-col items-end pointer-events-none mix-blend-difference">
                 <div className="flex items-center gap-3">
@@ -229,13 +239,42 @@ export function SlideshowContainer() {
     );
 }
 
-function LoadingFallback() {
+function TransitionOverlay({ isPending }: { isPending: boolean }) {
     return (
-        <div className="flex items-center justify-center w-full h-full bg-black text-emerald-500 font-mono tracking-widest text-sm uppercase">
-            <div className="flex flex-col items-center gap-4">
-                <div className="w-8 h-8 border-2 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin" />
-                <span className="animate-pulse">System Initializing...</span>
-            </div>
-        </div>
+        <AnimatePresence>
+            {isPending && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="fixed inset-0 z-[90] pointer-events-none flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px]"
+                >
+                    {/* Scanline Effect */}
+                    <div className="absolute inset-0 overflow-hidden opacity-20">
+                        <motion.div
+                            className="w-full h-[2px] bg-emerald-500 blur-[2px]"
+                            animate={{ top: ["0%", "100%"] }}
+                            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                        />
+                    </div>
+
+                    {/* Central Processing Status */}
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="flex items-center gap-2">
+                            <motion.div
+                                className="w-2 h-2 bg-emerald-500 rounded-full"
+                                animate={{ opacity: [1, 0.2, 1] }}
+                                transition={{ duration: 0.5, repeat: Infinity }}
+                            />
+                            <span className="font-mono text-xs tracking-[0.3em] text-emerald-500/80 animate-pulse">
+                                SYSTEM_ALIGNING
+                            </span>
+                        </div>
+                        <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
