@@ -179,7 +179,7 @@ export function SlideshowContainer() {
                 </motion.div>
             </AnimatePresence>
 
-            {/* Flash Overlay for Slide 1 -> 2 Transition */}
+            {/* Flash Overlay for Slide 1-> 2 Transition */}
             <motion.div
                 className="absolute inset-0 bg-accent z-50 pointer-events-none"
                 initial={{ opacity: 0 }}
